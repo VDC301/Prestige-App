@@ -6,6 +6,9 @@ create table private.login_rate_limits (
   attempts integer not null check (attempts >= 1)
 );
 
+create index login_rate_limits_window_idx
+  on private.login_rate_limits(window_started_at);
+
 revoke all on table private.login_rate_limits from public, anon, authenticated, service_role;
 
 create or replace function private.consume_login_rate_limit(
@@ -49,6 +52,12 @@ begin
     end
   returning attempts, window_started_at
   into v_attempts, v_window_started_at;
+
+  -- Opportunistic cleanup keeps expired IP buckets from accumulating forever.
+  if random() < 0.01 then
+    delete from private.login_rate_limits
+    where window_started_at < v_now - interval '1 day';
+  end if;
 
   v_retry_after := greatest(
     1,
