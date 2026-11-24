@@ -1,3 +1,4 @@
+import { readJsonLimited } from "../_shared/request.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 async function hmacSha256(secret: string, value: string): Promise<string> {
@@ -40,29 +41,11 @@ Deno.serve(async (request: Request) => {
 
   let input: { employeeNumber?: unknown; password?: unknown };
   try {
-    if (!request.body) return reply({ error: "Solicitud no válida." }, 400);
-    const reader = request.body.getReader();
-    const chunks: Uint8Array[] = [];
-    let totalBytes = 0;
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      totalBytes += value.byteLength;
-      if (totalBytes > 4096) {
-        await reader.cancel().catch(() => undefined);
-        return reply({ error: "Solicitud demasiado grande." }, 413);
-      }
-      chunks.push(value);
-    }
-    const body = new Uint8Array(totalBytes);
-    let offset = 0;
-    for (const chunk of chunks) {
-      body.set(chunk, offset);
-      offset += chunk.byteLength;
-    }
-    input = JSON.parse(new TextDecoder().decode(body));
-  } catch {
-    return reply({ error: "Solicitud no válida." }, 400);
+    input = await readJsonLimited(request, 4096) as typeof input;
+  } catch (error) {
+    return error instanceof Error && error.message === "REQUEST_TOO_LARGE"
+      ? reply({ error: "Solicitud demasiado grande." }, 413)
+      : reply({ error: "Solicitud no válida." }, 400);
   }
   const employeeNumber = typeof input.employeeNumber === "string" ? input.employeeNumber.trim().toUpperCase() : "";
   const password = typeof input.password === "string" ? input.password : "";
