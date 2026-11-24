@@ -4,6 +4,7 @@
 create or replace function public.validate_team_department_links()
 returns trigger
 language plpgsql
+security definer
 set search_path = pg_catalog, public
 as $$
 begin
@@ -41,6 +42,8 @@ begin
   return new;
 end;
 $$;
+
+revoke all on function public.validate_team_department_links() from public, anon, authenticated;
 
 create trigger validate_team_department_links
 before insert or update on public.teams
@@ -90,6 +93,8 @@ begin
   return old;
 end;
 $$;
+
+revoke all on function public.prevent_department_assignment_in_use() from public, anon, authenticated;
 
 create trigger prevent_department_assignment_in_use
 before delete on public.employee_departments
