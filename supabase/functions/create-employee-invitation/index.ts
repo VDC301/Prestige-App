@@ -10,6 +10,43 @@ function response(body: unknown, status = 200, origin = "") {
   });
 }
 
+async function hmacSha256(secret: string, value: string): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function readJsonLimited(request: Request, maxBytes: number): Promise<unknown> {
+  const declaredLength = Number(request.headers.get("content-length") ?? "0");
+  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
+    throw new Error("REQUEST_TOO_LARGE");
+  }
+  if (!request.body) throw new Error("INVALID_JSON");
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    totalBytes += value.byteLength;
+    if (totalBytes > maxBytes) {
+      await reader.cancel().catch(() => undefined);
+      throw new Error("REQUEST_TOO_LARGE");
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
 Deno.serve(async (request: Request) => {
   const allowedOrigin = Deno.env.get("APP_ORIGIN");
   const origin = request.headers.get("Origin") ?? "";
@@ -37,8 +74,12 @@ Deno.serve(async (request: Request) => {
     secondDepartmentReason?: unknown;
     canManageAdmins?: unknown;
   };
-  try { input = await request.json(); }
-  catch { return response({ error: "Solicitud no válida." }, 400, allowedOrigin); }
+  try { input = await readJsonLimited(request, 8192) as typeof input; }
+  catch (error) {
+    return error instanceof Error && error.message === "REQUEST_TOO_LARGE"
+      ? response({ error: "Solicitud demasiado grande." }, 413, allowedOrigin)
+      : response({ error: "Solicitud no válida." }, 400, allowedOrigin);
+  }
 
   const email = typeof input.email === "string" ? input.email.trim().toLowerCase() : "";
   const displayName = typeof input.displayName === "string" ? input.displayName.trim() : "";
@@ -106,6 +147,42 @@ Deno.serve(async (request: Request) => {
   }
   if (role === "admin" && canManageAdmins && actor.can_manage_admins !== true) {
     return response({ error: "No puedes conceder este permiso." }, 403, allowedOrigin);
+  }
+
+  // Apply independent quotas to the acting administrator and normalized recipient.
+  // Only HMAC fingerprints enter the private rate-limit table; neither ID nor email is stored there.
+  try {
+    const actorBucket = await hmacSha256(serviceKey, `prestige-invite-actor:v1:${actorId}`);
+    const recipientBucket = await hmacSha256(serviceKey, `prestige-invite-recipient:v1:${email}`);
+    const [actorLimit, recipientLimit] = await Promise.all([
+      adminClient.rpc("consume_login_rate_limit", {
+        p_bucket_key: actorBucket, p_limit: 30, p_window_seconds: 900,
+      }),
+      adminClient.rpc("consume_login_rate_limit", {
+        p_bucket_key: recipientBucket, p_limit: 5, p_window_seconds: 86400,
+      }),
+    ]);
+    if (actorLimit.error || recipientLimit.error ||
+        typeof actorLimit.data?.allowed !== "boolean" ||
+        typeof recipientLimit.data?.allowed !== "boolean") {
+      console.error("Invitation rate-limit check failed.");
+      return response({ error: "El servicio de invitaciones no está disponible temporalmente." }, 503, allowedOrigin);
+    }
+    if (!actorLimit.data.allowed || !recipientLimit.data.allowed) {
+      const retryAfter = Math.max(
+        1,
+        Number(!actorLimit.data.allowed ? actorLimit.data.retry_after_seconds : recipientLimit.data.retry_after_seconds) || 60,
+      );
+      return new Response(JSON.stringify({
+        error: "Se alcanzó el límite de invitaciones. Espera antes de volver a intentarlo.",
+      }), {
+        status: 429,
+        headers: { ...cors, "Content-Type": "application/json", "Retry-After": String(retryAfter) },
+      });
+    }
+  } catch (error) {
+    console.error("Invitation rate-limit check failed:", error);
+    return response({ error: "No se pudo verificar el límite de invitaciones." }, 503, allowedOrigin);
   }
 
   const { data: numberData, error: numberError } = await adminClient.rpc("next_employee_number", { target_role: role });
