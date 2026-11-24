@@ -2,3 +2,6 @@ project_id = "prestige-portal"
 
 [functions.employee-login]
 verify_jwt = false
+
+[functions.create-employee-invitation]
+verify_jwt = true
