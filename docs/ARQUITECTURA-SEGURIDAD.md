@@ -118,3 +118,20 @@ dos operaciones simultáneas lean el mismo conteo y creen una tercera
 asignación. La regla de una asignación principal y la justificación escrita
 para la segunda se mantienen. La migración 015 aún requiere prueba en el
 entorno de desarrollo antes de aplicarse al proyecto activo.
+
+
+## Integridad de equipos y asignaciones (migración 016)
+
+- El supervisor asignado a un equipo debe tener perfil activo, rol de
+  Supervisión y una asignación vigente al mismo departamento.
+- Un equipo no puede cambiar de departamento si conserva miembros sin
+  asignación al departamento nuevo o si tiene turnos/incidencias vinculados
+  al departamento anterior.
+- No se puede retirar una asignación departamental mientras el empleado siga
+  en equipos de ese departamento, tenga turnos programados/en curso, sea
+  supervisor de un equipo o tenga incidencias abiertas/en revisión asignadas.
+- El historial de incidencias cerradas y turnos completados/cancelados se
+  conserva sin bloquear innecesariamente la limpieza de asignaciones.
+
+La migración 016 está preparada en la rama de desarrollo y requiere pruebas
+en un entorno aislado antes de su aplicación.
