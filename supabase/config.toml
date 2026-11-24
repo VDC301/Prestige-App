@@ -1,0 +1,4 @@
+project_id = "prestige-portal"
+
+[functions.employee-login]
+verify_jwt = false
