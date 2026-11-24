@@ -26,3 +26,15 @@
 .employee-number{font-weight:700;color:var(--green);white-space:nowrap}
 @media(max-width:850px){.invite-layout{grid-template-columns:1fr}}
 @media(max-width:600px){.login-card{padding:25px}.workspace{grid-template-columns:1fr}.sidebar{min-height:auto}.content{min-height:480px}.stats{grid-template-columns:1fr}.dashboard-grid{grid-template-columns:1fr}.welcome{align-items:flex-start;flex-direction:column}}
+
+
+/* Delegated administrator controls */
+.inline-form{display:grid;gap:10px;max-width:560px}
+.inline-form label{margin:6px 0 0}
+.inline-form input:not([type="checkbox"]){width:100%;border:1px solid #dce4dc;border-radius:7px;padding:12px;font:13px "DM Sans",sans-serif;background:#fff;color:#1d2b25}
+.inline-form input:focus{outline:2px solid #b7cbbd;border-color:#7f9f89}
+.inline-form .department-options{display:flex;align-items:center;gap:9px;margin:8px 0}
+.inline-form .department-options input{width:auto;flex:0 0 auto}
+.inline-form button{justify-self:start;min-width:170px}
+.inline-form [role="status"]{margin:0;line-height:1.5}
+@media(max-width:520px){.inline-form button{width:100%}}
