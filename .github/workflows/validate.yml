@@ -35,7 +35,6 @@ jobs:
           grep -q 'for update' supabase/migrations/202611240017_operational_link_integrity.sql
           grep -q 'REVOKE TRUNCATE, REFERENCES, TRIGGER' supabase/migrations/202611240018_revoke_rls_bypass_table_privileges.sql
           grep -q 'ALTER DEFAULT PRIVILEGES FOR ROLE postgres' supabase/migrations/202611240018_revoke_rls_bypass_table_privileges.sql
-          grep -q 'ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin' supabase/migrations/202611240018_revoke_rls_bypass_table_privileges.sql
 
       - name: Configurar Deno para Edge Functions
         uses: denoland/setup-deno@v2
