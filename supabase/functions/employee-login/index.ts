@@ -1,20 +1,26 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": Deno.env.get("APP_ORIGIN") ?? "https://vdc301.github.io",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Vary": "Origin",
-};
-function reply(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-}
 Deno.serve(async (request: Request) => {
+  const allowedOrigin = Deno.env.get("APP_ORIGIN");
+  const origin = request.headers.get("Origin") ?? "";
+  if (!allowedOrigin) return new Response(JSON.stringify({ error: "El servicio no está configurado." }), {
+    status: 503, headers: { "Content-Type": "application/json" },
+  });
+  if (origin && origin !== allowedOrigin) return new Response(JSON.stringify({ error: "No autorizado." }), {
+    status: 403, headers: { "Content-Type": "application/json" },
+  });
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
+    "Content-Type": "application/json",
+  };
+  function reply(body: unknown, status = 200) {
+    return new Response(JSON.stringify(body), { status, headers: corsHeaders });
+  }
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (request.method !== "POST") return reply({ error: "Solicitud no válida." }, 405);
-  const allowedOrigin = Deno.env.get("APP_ORIGIN");
-  const origin = request.headers.get("Origin");
-  if (allowedOrigin && origin && origin !== allowedOrigin) return reply({ error: "No autorizado." }, 403);
 
   let input: { employeeNumber?: unknown; password?: unknown };
   try { input = await request.json(); } catch { return reply({ error: "Solicitud no válida." }, 400); }
