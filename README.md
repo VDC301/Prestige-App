@@ -14,6 +14,7 @@ La rama main contiene la primera interfaz demostrativa y la estructura PWA. La r
 - Equipos, turnos e incidencias.
 - Edge Function para iniciar sesión con número de empleado y contraseña.
 - Límite de solicitudes previo a la búsqueda del número de empleado, con contador atómico en PostgreSQL y huella HMAC de la IP de origen.
+- Índices adicionales para las claves foráneas detectadas por el asesor de rendimiento.
 
 ## Seguridad
 
