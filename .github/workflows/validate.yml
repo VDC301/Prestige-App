@@ -26,6 +26,7 @@ jobs:
           test -f supabase/migrations/202611240013_login_rate_limit.sql
           test -f supabase/migrations/202611240014_supporting_fk_indexes.sql
           test -f supabase/migrations/202611240015_serialize_department_assignments.sql
+          test -f supabase/migrations/202611240016_team_assignment_integrity.sql
 
       - name: Configurar Deno para Edge Functions
         uses: denoland/setup-deno@v2
