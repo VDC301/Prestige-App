@@ -23,6 +23,7 @@ jobs:
           test -f app.js
           test -f sw.js
           test -f supabase/migrations/202611240001_initial_schema.sql
+          test -f supabase/migrations/202611240013_login_rate_limit.sql
 
       - name: Configurar Deno para Edge Functions
         uses: denoland/setup-deno@v2
