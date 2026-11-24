@@ -16,6 +16,7 @@ La rama main contiene la primera interfaz demostrativa y la estructura PWA. La r
 - Límite de solicitudes previo a la búsqueda del número de empleado, con contador atómico en PostgreSQL y huella HMAC de la IP de origen.
 - Índices adicionales para las claves foráneas detectadas por el asesor de rendimiento.
 - Bloqueo por empleado para impedir que altas simultáneas excedan el máximo de dos departamentos.
+- Validación de supervisores de equipo y protección de asignaciones utilizadas por equipos, turnos e incidencias.
 
 ## Seguridad
 
