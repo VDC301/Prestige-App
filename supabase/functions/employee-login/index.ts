@@ -1,5 +1,17 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
+async function hmacSha256(secret: string, value: string): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 Deno.serve(async (request: Request) => {
   const allowedOrigin = Deno.env.get("APP_ORIGIN");
   const origin = request.headers.get("Origin") ?? "";
@@ -65,6 +77,36 @@ Deno.serve(async (request: Request) => {
 
   const admin = createClient(url, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
   const auth = createClient(url, anonKey, { auth: { autoRefreshToken: false, persistSession: false } });
+
+  // Supabase Edge Functions run behind Cloudflare. Use only its single-value
+  // client-IP header; never trust caller-controlled X-Forwarded-For values.
+  const clientIp = request.headers.get("cf-connecting-ip")?.trim() ?? "";
+  if (!clientIp || clientIp.length > 64 || /[,;\\s]/.test(clientIp)) {
+    return reply({ error: "El servicio de acceso no puede verificar el origen de la solicitud." }, 503);
+  }
+  let rateLimitKey: string;
+  try {
+    rateLimitKey = await hmacSha256(serviceKey, `prestige-login-ip:v1:${clientIp}`);
+  } catch {
+    return reply({ error: "No se pudo verificar la solicitud. Inténtalo más tarde." }, 503);
+  }
+  const { data: rateLimit, error: rateLimitError } = await admin.rpc("consume_login_rate_limit", {
+    p_bucket_key: rateLimitKey,
+    p_limit: 300,
+    p_window_seconds: 900,
+  });
+  if (rateLimitError || !rateLimit || typeof rateLimit.allowed !== "boolean") {
+    console.error("Login rate-limit check failed:", rateLimitError?.message ?? "Invalid response");
+    return reply({ error: "El servicio de acceso no está disponible temporalmente." }, 503);
+  }
+  if (!rateLimit.allowed) {
+    const retryAfter = Math.max(1, Number(rateLimit.retry_after_seconds) || 60);
+    return new Response(JSON.stringify({ error: "Demasiados intentos desde esta conexión. Espera antes de volver a intentarlo." }), {
+      status: 429,
+      headers: { ...corsHeaders, "Retry-After": String(retryAfter) },
+    });
+  }
+
   const { data: profile, error: lookupError } = await admin.from("profiles")
     .select("id,is_active").eq("employee_number", employeeNumber).maybeSingle();
   if (lookupError || !profile || !profile.is_active) {
