@@ -85,7 +85,13 @@ oportunista dentro de la función SQL.
 
 ## Estado de despliegue
 
-Las migraciones 008–013 y las Edge Functions están en la rama de desarrollo.
+Las migraciones 008–014 y las Edge Functions están en la rama de desarrollo.
 Las pruebas SQL se ejecutaron dentro de transacciones revertidas.
+
+La migración 014 agrega índices para las 17 claves foráneas señaladas por el
+asesor de rendimiento de Supabase en la base activa. La advertencia de política
+duplicada de perfiles y las cinco funciones SECURITY DEFINER en `public`
+corresponden al estado anterior a las migraciones 011 y 012, todavía pendientes
+de aplicar.
 No se han aplicado estas migraciones al proyecto activo ni se han desplegado
 las funciones.
