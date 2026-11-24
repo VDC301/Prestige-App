@@ -129,7 +129,7 @@ function renderPersonal() {
       <label for="invite-role">Rol</label>
       <select id="invite-role" name="role" required>
         <option value="employee">Empleado</option><option value="supervisor">Supervisor</option>
-        <option value="manager">Gerencia</option><option value="admin">Administración</option>
+        <option value="manager">Gerencia</option><option value="admin" ${canDelegate ? "" : "disabled"}>Administración</option>
       </select>
       <div id="department-fields">
         <label>Departamento principal</label>
@@ -156,6 +156,17 @@ function renderPersonal() {
       <div class="notice" style="margin-top:14px">Cada invitación genera un número automático y un registro de auditoría.</div>
     </div>
   </div>
+  ${canDelegate ? `<div class="panel" style="margin-top:16px">
+    <h3>Permisos de Administración</h3>
+    <p class="muted">Concede o retira la facultad de crear y administrar otras cuentas administrativas. No cambia el rol de la persona.</p>
+    <form id="admin-delegation-form" class="inline-form">
+      <label for="admin-target-number">Número de empleado administrativo</label>
+      <input id="admin-target-number" name="employeeNumber" required maxlength="32" pattern="ADM-[0-9]{3,}" placeholder="ADM-001">
+      <label class="department-options"><input id="admin-target-permission" type="checkbox"> Autorizar administración de otras cuentas</label>
+      <p id="admin-delegation-feedback" role="status" hidden></p>
+      <button class="primary-button" type="submit" id="admin-delegation-submit">Guardar permiso</button>
+    </form>
+  </div>` : ""}
   <div class="panel" style="margin-top:16px"><h3>Directorio de empleados</h3><div id="directory-list"><div class="empty-state">Cargando directorio…</div></div></div>`;
 }
 
@@ -244,6 +255,31 @@ document.addEventListener("change",event=>{
 });
 
 document.addEventListener("submit",async event=>{
+  if(event.target.id==="admin-delegation-form") {
+    event.preventDefault();
+    const form=event.target;
+    const button=$("admin-delegation-submit");
+    button.disabled=true;
+    button.textContent="Guardando…";
+    $("admin-delegation-feedback").hidden=true;
+    try {
+      const {data,error}=await supabase.functions.invoke("manage-admin-delegation",{
+        body:{
+          employeeNumber:$("admin-target-number").value.trim().toUpperCase(),
+          canManageAdmins:$("admin-target-permission").checked
+        }
+      });
+      if(error) throw new Error(data?.error||"No se pudo actualizar el permiso.");
+      showFeedback("admin-delegation-feedback",data.message||"Permiso actualizado.","success");
+      form.reset();
+    } catch(err) {
+      showFeedback("admin-delegation-feedback",err.message||"No se pudo actualizar el permiso.");
+    } finally {
+      button.disabled=false;
+      button.textContent="Guardar permiso";
+    }
+    return;
+  }
   if(event.target.id!=="invite-form")return;
   event.preventDefault();
   const form=event.target;
