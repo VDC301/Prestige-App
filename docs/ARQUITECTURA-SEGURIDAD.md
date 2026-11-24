@@ -108,3 +108,13 @@ corresponden al estado anterior a las migraciones 011 y 012, todavía pendientes
 de aplicar.
 No se han aplicado estas migraciones al proyecto activo ni se han desplegado
 las funciones.
+
+
+## Integridad de asignaciones concurrentes (migración 015)
+
+La validación del máximo de dos departamentos se serializa por empleado
+bloqueando su fila de perfil durante cada alta de asignación. Esto evita que
+dos operaciones simultáneas lean el mismo conteo y creen una tercera
+asignación. La regla de una asignación principal y la justificación escrita
+para la segunda se mantienen. La migración 015 aún requiere prueba en el
+entorno de desarrollo antes de aplicarse al proyecto activo.
