@@ -122,30 +122,37 @@ Deno.serve(async (request: Request) => {
     return response({ error: "No puedes conceder este permiso." }, 403, allowedOrigin);
   }
 
-  // Apply independent quotas to the acting administrator and normalized recipient.
-  // Only HMAC fingerprints enter the private rate-limit table; neither ID nor email is stored there.
+  // Check the administrator quota first so blocked requests cannot consume
+  // recipient quota and deny that recipient an invitation from another admin.
   try {
     const actorBucket = await hmacSha256(serviceKey, `prestige-invite-actor:v1:${actorId}`);
-    const recipientBucket = await hmacSha256(serviceKey, `prestige-invite-recipient:v1:${email}`);
-    const [actorLimit, recipientLimit] = await Promise.all([
-      adminClient.rpc("consume_login_rate_limit", {
-        p_bucket_key: actorBucket, p_limit: 30, p_window_seconds: 900,
-      }),
-      adminClient.rpc("consume_login_rate_limit", {
-        p_bucket_key: recipientBucket, p_limit: 5, p_window_seconds: 86400,
-      }),
-    ]);
-    if (actorLimit.error || recipientLimit.error ||
-        typeof actorLimit.data?.allowed !== "boolean" ||
-        typeof recipientLimit.data?.allowed !== "boolean") {
-      console.error("Invitation rate-limit check failed.");
+    const actorLimit = await adminClient.rpc("consume_login_rate_limit", {
+      p_bucket_key: actorBucket, p_limit: 30, p_window_seconds: 900,
+    });
+    if (actorLimit.error || typeof actorLimit.data?.allowed !== "boolean") {
+      console.error("Invitation actor rate-limit check failed.");
       return response({ error: "El servicio de invitaciones no está disponible temporalmente." }, 503, allowedOrigin);
     }
-    if (!actorLimit.data.allowed || !recipientLimit.data.allowed) {
-      const retryAfter = Math.max(
-        1,
-        Number(!actorLimit.data.allowed ? actorLimit.data.retry_after_seconds : recipientLimit.data.retry_after_seconds) || 60,
-      );
+    if (!actorLimit.data.allowed) {
+      const retryAfter = Math.max(1, Number(actorLimit.data.retry_after_seconds) || 60);
+      return new Response(JSON.stringify({
+        error: "Se alcanzó el límite de invitaciones. Espera antes de volver a intentarlo.",
+      }), {
+        status: 429,
+        headers: { ...cors, "Content-Type": "application/json", "Retry-After": String(retryAfter) },
+      });
+    }
+
+    const recipientBucket = await hmacSha256(serviceKey, `prestige-invite-recipient:v1:${email}`);
+    const recipientLimit = await adminClient.rpc("consume_login_rate_limit", {
+      p_bucket_key: recipientBucket, p_limit: 5, p_window_seconds: 86400,
+    });
+    if (recipientLimit.error || typeof recipientLimit.data?.allowed !== "boolean") {
+      console.error("Invitation recipient rate-limit check failed.");
+      return response({ error: "El servicio de invitaciones no está disponible temporalmente." }, 503, allowedOrigin);
+    }
+    if (!recipientLimit.data.allowed) {
+      const retryAfter = Math.max(1, Number(recipientLimit.data.retry_after_seconds) || 60);
       return new Response(JSON.stringify({
         error: "Se alcanzó el límite de invitaciones. Espera antes de volver a intentarlo.",
       }), {
