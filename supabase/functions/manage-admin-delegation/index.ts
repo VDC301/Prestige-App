@@ -58,9 +58,9 @@ Deno.serve(async (request: Request) => {
   }
 
   const { data: result, error: permissionError } = await admin.rpc("set_admin_delegation_permission", {
-    actor_id: actor.id,
-    target_employee_number: employeeNumber,
-    grant_permission: input.canManageAdmins,
+    p_actor_id: actor.id,
+    p_target_employee_number: employeeNumber,
+    p_grant_permission: input.canManageAdmins,
   });
   if (permissionError) {
     const message = permissionError.message.includes("not found")
