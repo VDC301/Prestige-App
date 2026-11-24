@@ -35,3 +35,14 @@
 Estas migraciones y Edge Function son una base de implementación, no una instalación ya conectada. El repositorio no contiene credenciales ni un proyecto Supabase. La interfaz actual todavía es demostrativa; no debe usarse con información real hasta completar despliegue, pruebas de seguridad e integración.
 
 El modo offline de producción requiere almacenamiento local protegido, cola de operaciones, resolución de conflictos y sincronización autorizada. No se almacenarán contraseñas ni tokens de larga duración en cachés del service worker.
+
+
+## Gestión automatizada de cuentas
+- Las altas se procesan en la Edge Function `create-employee-invitation`, que exige JWT y valida que el actor sea un administrador activo.
+- Los números de empleado se generan en servidor con contadores bloqueados por prefijo para evitar duplicados concurrentes.
+- La invitación de correo usa Supabase Auth Admin; el perfil se enlaza al UUID de Auth. Nunca se insertan usuarios directamente en `auth.users`.
+- `can_manage_admins` separa el rol de Administración de la facultad de crear o delegar otras cuentas administrativas. ADM-000 recibe inicialmente esa facultad; los demás administradores no la reciben automáticamente.
+- La Edge Function `manage-admin-delegation` permite cambiar la delegación de otro administrador únicamente a quien tenga esa facultad. El cambio y su auditoría se ejecutan dentro de una misma transacción SQL.
+- Los clientes autenticados no pueden modificar el rol, el estado activo, el número de empleado ni la delegación administrativa de un perfil.
+
+Estas migraciones y funciones están en la rama de desarrollo. No se han aplicado las migraciones 008–010 al proyecto Supabase ni se han desplegado las funciones nuevas.
