@@ -187,6 +187,17 @@ async function loadDirectory() {
   target.innerHTML=directory.map(person=>`<div class="employee-row"><span><strong>${escapeHtml(person.display_name)}</strong><small>${escapeHtml(roleNames[person.role]||person.role)}</small></span><span class="tag">${person.is_active?"Activo":"Inactivo"}</span></div>`).join("");
 }
 
+async function edgeFunctionErrorMessage(error,data,fallback) {
+  if(typeof data?.error==="string" && data.error) return data.error;
+  const response=error?.context;
+  if(response && typeof response.clone==="function") {
+    try {
+      const body=await response.clone().json();
+      if(typeof body?.error==="string" && body.error) return body.error;
+    } catch { /* Use the safe fallback below. */ }
+  }
+  return fallback;
+}
 function showFeedback(id,message,type="error") {
   const el=$(id);
   if(!el)return;
@@ -269,7 +280,7 @@ document.addEventListener("submit",async event=>{
           canManageAdmins:$("admin-target-permission").checked
         }
       });
-      if(error) throw new Error(data?.error||"No se pudo actualizar el permiso.");
+      if(error) throw new Error(await edgeFunctionErrorMessage(error,data,"No se pudo actualizar el permiso."));
       showFeedback("admin-delegation-feedback",data.message||"Permiso actualizado.","success");
       form.reset();
     } catch(err) {
@@ -299,7 +310,7 @@ document.addEventListener("submit",async event=>{
   };
   try {
     const {data,error}=await supabase.functions.invoke("create-employee-invitation",{body:payload});
-    if(error) throw new Error(data?.error||"No se pudo enviar la invitación. Comprueba el servicio.");
+    if(error) throw new Error(await edgeFunctionErrorMessage(error,data,"No se pudo enviar la invitación. Comprueba el servicio."));
     showFeedback("invite-feedback",`Invitación enviada. Número asignado: ${data.employeeNumber}. La persona recibirá un correo para activar su cuenta.`,"success");
     form.reset();
     $("department-fields").hidden=false;
