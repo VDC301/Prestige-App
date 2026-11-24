@@ -39,6 +39,9 @@ begin
   when 'supervisor' then 'SUP'
   when 'employee' then 'EMP'
  end;
+ if target_prefix is null then
+  raise exception 'Unsupported employee role.';
+ end if;
 
  insert into public.employee_number_counters(prefix, last_value)
  values (
@@ -46,10 +49,12 @@ begin
   greatest(
    case when target_prefix = 'ADM' then 0 else 1 end,
    coalesce((
-    select max(case when split_part(p.employee_number, '-', 2) ~ '^[0-9]{3,}
+    select max(case
+      when split_part(p.employee_number, '-', 2) ~ '^[0-9]{3,}$'
+      then split_part(p.employee_number, '-', 2)::integer
+     end) + 1
     from public.profiles p
     where split_part(p.employee_number, '-', 1) = target_prefix
-      
    ), case when target_prefix = 'ADM' then 0 else 1 end)
   )
  )
@@ -57,64 +62,19 @@ begin
  set last_value = greatest(
   public.employee_number_counters.last_value + 1,
   coalesce((
-   select max(split_part(p.employee_number, '-', 2)::integer) + 1
+   select max(case
+     when split_part(p.employee_number, '-', 2) ~ '^[0-9]{3,}$'
+     then split_part(p.employee_number, '-', 2)::integer
+    end) + 1
    from public.profiles p
    where split_part(p.employee_number, '-', 1) = target_prefix
-     
   ), case when target_prefix = 'ADM' then 0 else 1 end)
  )
  returning last_value into next_value;
 
- return target_prefix || '-' || case when next_value < 1000 then lpad(next_value::text, 3, '0') else next_value::text end;
-end;
-$$;
-
-revoke all on function public.next_employee_number(public.app_role) from public, anon, authenticated;
-grant execute on function public.next_employee_number(public.app_role) to service_role;
-
--- Prevent browser clients from changing roles, activation state or delegated admin authority.
-revoke update on public.profiles from authenticated;
-revoke update (employee_number, display_name, role, is_active) on public.profiles from authenticated;
-grant update (display_name) on public.profiles to authenticated;
- then split_part(p.employee_number, '-', 2)::integer end) + 1
-    from public.profiles p
-    where split_part(p.employee_number, '-', 1) = target_prefix
-      
-   ), case when target_prefix = 'ADM' then 0 else 1 end)
-  )
- )
- on conflict (prefix) do update
- set last_value = greatest(
-  public.employee_number_counters.last_value + 1,
-  coalesce((
-   select max(case when split_part(p.employee_number, '-', 2) ~ '^[0-9]{3,}
-   from public.profiles p
-   where split_part(p.employee_number, '-', 1) = target_prefix
-     
-  ), case when target_prefix = 'ADM' then 0 else 1 end)
- )
- returning last_value into next_value;
-
- return target_prefix || '-' || lpad(next_value::text, 3, '0');
-end;
-$$;
-
-revoke all on function public.next_employee_number(public.app_role) from public, anon, authenticated;
-grant execute on function public.next_employee_number(public.app_role) to service_role;
-
--- Prevent browser clients from changing roles, activation state or delegated admin authority.
-revoke update on public.profiles from authenticated;
-revoke update (employee_number, display_name, role, is_active) on public.profiles from authenticated;
-grant update (display_name) on public.profiles to authenticated;
- then split_part(p.employee_number, '-', 2)::integer end) + 1
-   from public.profiles p
-   where split_part(p.employee_number, '-', 1) = target_prefix
-     
-  ), case when target_prefix = 'ADM' then 0 else 1 end)
- )
- returning last_value into next_value;
-
- return target_prefix || '-' || lpad(next_value::text, 3, '0');
+ return target_prefix || '-' ||
+  case when next_value < 1000 then lpad(next_value::text, 3, '0')
+       else next_value::text end;
 end;
 $$;
 
