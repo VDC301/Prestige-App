@@ -32,6 +32,11 @@ jobs:
           deno-version: v2.x
       - name: Verificar Edge Functions
         run: |
+          deno test supabase/functions/_shared/request_test.ts
+          deno check supabase/functions/employee-login/index.ts
+          deno check supabase/functions/create-employee-invitation/index.ts
+          deno check supabase/functions/manage-admin-delegation/index.ts
+        run: |
           deno check supabase/functions/employee-login/index.ts
           deno check supabase/functions/create-employee-invitation/index.ts
           deno check supabase/functions/manage-admin-delegation/index.ts
