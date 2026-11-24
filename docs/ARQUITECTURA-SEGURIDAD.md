@@ -98,7 +98,7 @@ evitar fricción operativa.
 
 ## Estado de despliegue
 
-Las migraciones 008–014 y las Edge Functions están en la rama de desarrollo.
+Las migraciones 008–018 y las Edge Functions están en la rama de desarrollo.
 Las pruebas SQL se ejecutaron dentro de transacciones revertidas.
 
 La migración 014 agrega índices para las 17 claves foráneas señaladas por el
@@ -106,9 +106,9 @@ asesor de rendimiento de Supabase en la base activa. La advertencia de política
 duplicada de perfiles y las cinco funciones SECURITY DEFINER en `public`
 corresponden al estado anterior a las migraciones 011 y 012, todavía pendientes
 de aplicar.
+
 No se han aplicado estas migraciones al proyecto activo ni se han desplegado
 las funciones.
-
 
 ## Integridad de asignaciones concurrentes (migración 015)
 
@@ -118,7 +118,6 @@ dos operaciones simultáneas lean el mismo conteo y creen una tercera
 asignación. La regla de una asignación principal y la justificación escrita
 para la segunda se mantienen. La migración 015 aún requiere prueba en el
 entorno de desarrollo antes de aplicarse al proyecto activo.
-
 
 ## Integridad de equipos y asignaciones (migración 016)
 
@@ -137,7 +136,6 @@ entorno de desarrollo antes de aplicarse al proyecto activo.
 
 La migración 016 está preparada en la rama de desarrollo y requiere pruebas
 en un entorno aislado antes de su aplicación.
-
 
 ## Integridad operativa y concurrencia (migración 017)
 
@@ -168,3 +166,22 @@ pruebas reales de PostgreSQL. Antes de aplicarla se deben ejecutar pruebas
 transaccionales en un proyecto aislado que cubran altas válidas e inválidas,
 actualizaciones, eliminaciones y operaciones concurrentes. No se ha aplicado
 al proyecto Supabase activo.
+
+## Privilegios de tabla que eluden RLS (migración 018)
+
+La auditoría de los privilegios efectivos detectó que los roles `anon` y
+`authenticated` tenían permiso `TRUNCATE` en las tablas del esquema
+`public`. PostgreSQL no aplica políticas RLS a `TRUNCATE`; por eso este
+permiso debe permanecer reservado a funciones administrativas de base de
+datos y nunca al navegador. Los privilegios `REFERENCES` y `TRIGGER`
+tampoco son necesarios para clientes.
+
+La migración 018 revoca esos tres privilegios en las tablas existentes y
+ajusta los privilegios predeterminados de los roles `postgres` y
+`supabase_admin` para que las tablas futuras no los vuelvan a conceder
+automáticamente a `anon` o `authenticated`. No modifica los permisos
+normales de lectura/escritura que se controlan mediante RLS.
+
+La migración está preparada en la rama de desarrollo; no se ha aplicado al
+proyecto Supabase activo. Antes de cualquier despliegue se comprobará que los
+privilegios efectivos queden desactivados para ambos roles.
