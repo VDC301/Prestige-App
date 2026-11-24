@@ -12,11 +12,12 @@ La rama main contiene la primera interfaz demostrativa y la estructura PWA. La r
 - Asignaciones departamentales explícitas; una asignación doble requiere autorización administrativa y deja constancia.
 - Tablas separadas para comunicados oficiales y conversaciones.
 - Equipos, turnos e incidencias.
-- Edge Function inicial para iniciar sesión con número de empleado y contraseña.
+- Edge Function para iniciar sesión con número de empleado y contraseña.
+- Límite de solicitudes previo a la búsqueda del número de empleado, con contador atómico en PostgreSQL y huella HMAC de la IP de origen.
 
 ## Seguridad
 
-Los perfiles de demostración del frontend no son autenticación real. No introducir información personal ni operativa en esta versión. La función de acceso y el esquema SQL requieren un proyecto Supabase configurado, secretos del servidor, creación segura de la primera cuenta administrativa y pruebas RLS antes de producción.
+Los perfiles de demostración del frontend no son autenticación real. No introducir información personal ni operativa en esta versión. La función de acceso y el esquema SQL requieren un proyecto Supabase configurado, secretos del servidor, creación segura de la primera cuenta administrativa y pruebas RLS antes de producción. Las migraciones 008–013 y las Edge Functions siguen en la rama de desarrollo; no están desplegadas en el proyecto activo.
 
 Nunca colocar la clave service_role en el navegador o en este repositorio.
 
