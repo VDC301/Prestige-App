@@ -6,13 +6,9 @@ REVOKE TRUNCATE, REFERENCES, TRIGGER
 ON ALL TABLES IN SCHEMA public
 FROM anon, authenticated;
 
--- Keep the same least-privilege baseline for tables created by either
--- database role used for Supabase migrations/project administration.
+-- Supabase migrations for this project execute as postgres. Keep future tables
+-- created by that role on the same least-privilege baseline.
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public
-REVOKE TRUNCATE, REFERENCES, TRIGGER ON TABLES
-FROM anon, authenticated;
-
-ALTER DEFAULT PRIVILEGES FOR ROLE supabase_admin IN SCHEMA public
 REVOKE TRUNCATE, REFERENCES, TRIGGER ON TABLES
 FROM anon, authenticated;
 
