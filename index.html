@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d32">
+  <meta name="description" content="Portal interno de Prestige Landscaping & Cleaning.">
+  <title>Prestige | Portal del equipo</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Prestige, inicio">
+        <span class="brand-name">PRESTIGE</span>
+        <span class="brand-subtitle">LANDSCAPING &amp; CLEANING</span>
+      </a>
+      <div class="topbar-actions">
+        <span class="connection" id="connection-status"><i></i> En línea</span>
+        <button class="avatar" id="profile-button" aria-label="Perfil">AD</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="welcome">
+        <div>
+          <p class="eyebrow" id="today-label">PORTAL DEL EQUIPO</p>
+          <h1 id="greeting">Bienvenido a Prestige</h1>
+          <p class="muted" id="welcome-copy">Todo lo que necesitas para tu jornada, en un solo lugar.</p>
+        </div>
+        <span class="demo-pill">Vista de demostración</span>
+      </section>
+
+      <section class="workspace">
+        <aside class="sidebar" aria-label="Navegación principal">
+          <div class="user-card">
+            <div class="user-avatar" id="user-avatar">AD</div>
+            <div><strong id="user-name">Administración</strong><small id="user-role">Panel de administración</small></div>
+          </div>
+          <p class="nav-heading">MENÚ PRINCIPAL</p>
+          <nav id="main-nav">
+            <button class="nav-link active" data-view="inicio"><span>⌂</span> Inicio</button>
+            <button class="nav-link" data-view="comunicados"><span>▤</span> Comunicados oficiales</button>
+            <button class="nav-link" data-view="conversaciones"><span>☷</span> Conversaciones</button>
+            <button class="nav-link" data-view="turnos"><span>◷</span> Turnos y horarios</button>
+            <button class="nav-link" data-view="equipos"><span>♧</span> Equipos</button>
+            <button class="nav-link" data-view="incidencias"><span>⚑</span> Incidencias</button>
+            <button class="nav-link admin-only" data-view="personal"><span>♙</span> Personal</button>
+            <button class="nav-link admin-only" data-view="ajustes"><span>⚙</span> Configuración</button>
+          </nav>
+          <div class="sidebar-bottom">
+            <span class="small-label">DEPARTAMENTO ACTIVO</span>
+            <strong id="department-label">Administración</strong>
+            <button class="text-button" id="switch-department">Cambiar vista de demostración</button>
+          </div>
+        </aside>
+
+        <section class="content" aria-live="polite">
+          <div class="mobile-context"><span id="mobile-department">Administración</span><span>•</span><span id="mobile-role">Administrador</span></div>
+          <div id="view-container"></div>
+        </section>
+      </section>
+    </main>
+    <footer><span>PRESTIGE LANDSCAPING &amp; CLEANING</span><span>Portal interno · Versión inicial</span></footer>
+  </div>
+
+  <dialog id="demo-dialog" class="modal">
+    <form method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">MODO DEMOSTRACIÓN</p><h2>Cambiar perfil de vista</h2></div><button class="icon-button" aria-label="Cerrar">×</button></div>
+      <p class="muted">Selecciona un perfil de ejemplo para revisar la separación de departamentos y permisos.</p>
+      <label for="demo-profile">Perfil</label>
+      <select id="demo-profile">
+        <option value="admin">Administración</option>
+        <option value="manager-land">Gerencia · Landscaping</option>
+        <option value="manager-clean">Gerencia · Cleaning</option>
+        <option value="super-land">Supervisor · Landscaping</option>
+        <option value="super-clean">Supervisor · Cleaning</option>
+        <option value="employee-land">Empleado · Landscaping</option>
+        <option value="employee-clean">Empleado · Cleaning</option>
+        <option value="hybrid">Empleado autorizado · Ambos departamentos</option>
+      </select>
+      <button class="primary-button full" id="apply-profile" value="apply">Aplicar perfil</button>
+    </form>
+  </dialog>
+  <script src="./app.js" defer></script>
+</body>
+</html>
