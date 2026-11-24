@@ -21,3 +21,6 @@ Los clientes autenticados solo pueden actualizar su nombre visible. No pueden ca
 - Mantener `verify_jwt = true` para `create-employee-invitation`.
 - No desplegar hasta revisar CORS, límites de invitaciones, recuperación de cuenta, plantillas de correo y pruebas negativas de autorización.
 - La función no se despliega con este commit; el código queda preparado para revisión.
+
+## Permisos administrativos delegados
+La RPC `current_user_can_manage_admins()` devuelve únicamente si la sesión actual puede delegar permisos administrativos. La Edge Function `manage-admin-delegation` permite a ese administrador habilitar o retirar esa facultad a otra cuenta ADM. No permite cambiar el permiso propio y cada cambio queda en auditoría.
