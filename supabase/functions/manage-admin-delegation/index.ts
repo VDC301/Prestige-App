@@ -57,35 +57,23 @@ Deno.serve(async (request: Request) => {
     return reply({ error: "No tienes autorización para modificar permisos administrativos." }, 403, allowedOrigin);
   }
 
-  const { data: target, error: targetError } = await admin.from("profiles")
-    .select("id,employee_number,role,can_manage_admins")
-    .eq("employee_number", employeeNumber).maybeSingle();
-  if (targetError || !target || target.role !== "admin") {
-    return reply({ error: "No se encontró esa cuenta administrativa." }, 404, allowedOrigin);
-  }
-  if (target.id === actor.id) {
-    return reply({ error: "Por seguridad, no puedes modificar tu propio permiso de delegación." }, 400, allowedOrigin);
-  }
-  if (target.can_manage_admins === input.canManageAdmins) {
-    return reply({ message: "El permiso ya tenía ese valor.", employeeNumber }, 200, allowedOrigin);
-  }
-
-  const { error: updateError } = await admin.from("profiles")
-    .update({ can_manage_admins: input.canManageAdmins }).eq("id", target.id);
-  if (updateError) return reply({ error: "No se pudo actualizar el permiso." }, 500, allowedOrigin);
-
-  const { error: auditError } = await admin.from("audit_log").insert({
+  const { data: result, error: permissionError } = await admin.rpc("set_admin_delegation_permission", {
     actor_id: actor.id,
-    action: "admin_delegation_permission_changed",
-    entity_type: "profile",
-    entity_id: target.id,
-    details: {
-      employee_number: target.employee_number,
-      previous_value: target.can_manage_admins,
-      new_value: input.canManageAdmins,
-    },
+    target_employee_number: employeeNumber,
+    grant_permission: input.canManageAdmins,
   });
-  if (auditError) return reply({ error: "El permiso cambió, pero no se pudo completar la auditoría. Requiere revisión administrativa." }, 500, allowedOrigin);
+  if (permissionError) {
+    const message = permissionError.message.includes("not found")
+      ? "No se encontró esa cuenta administrativa."
+      : permissionError.message.includes("own delegation")
+        ? "Por seguridad, no puedes modificar tu propio permiso."
+        : "No se pudo validar o actualizar el permiso administrativo.";
+    return reply({ error: message }, 400, allowedOrigin);
+  }
 
-  return reply({ message: "Permiso administrativo actualizado.", employeeNumber, canManageAdmins: input.canManageAdmins }, 200, allowedOrigin);
+  return reply({
+    message: result?.changed ? "Permiso administrativo actualizado." : "El permiso ya tenía ese valor.",
+    employeeNumber,
+    canManageAdmins: result?.can_manage_admins,
+  }, 200, allowedOrigin);
 });
