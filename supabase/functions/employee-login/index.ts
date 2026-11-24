@@ -81,7 +81,7 @@ Deno.serve(async (request: Request) => {
   // Supabase Edge Functions run behind Cloudflare. Use only its single-value
   // client-IP header; never trust caller-controlled X-Forwarded-For values.
   const clientIp = request.headers.get("cf-connecting-ip")?.trim() ?? "";
-  if (!clientIp || clientIp.length > 64 || /[,;\\s]/.test(clientIp)) {
+  if (!clientIp || clientIp.length > 64 || /[,;\s]/.test(clientIp)) {
     return reply({ error: "El servicio de acceso no puede verificar el origen de la solicitud." }, 503);
   }
   let rateLimitKey: string;
