@@ -17,7 +17,7 @@ La columna `profiles.can_manage_admins` controla quién puede crear otras cuenta
 Los clientes autenticados solo pueden actualizar su nombre visible. No pueden cambiar su rol, estado activo ni permiso de delegación. Esos cambios se reservan a operaciones de servidor autorizadas.
 
 ## Seguridad antes de producción
-- Configurar `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` y `APP_ORIGIN` como secretos de Edge Functions.
+- Configurar `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `APP_ORIGIN` y `APP_REDIRECT_URL` como secretos de Edge Functions. `APP_REDIRECT_URL` debe ser la URL completa de la PWA y estar permitida en Auth > URL Configuration > Redirect URLs.
 - Mantener `verify_jwt = true` para `create-employee-invitation`.
 - No desplegar hasta revisar CORS, límites de invitaciones, recuperación de cuenta, plantillas de correo y pruebas negativas de autorización.
 - La función no se despliega con este commit; el código queda preparado para revisión.
