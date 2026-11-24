@@ -21,6 +21,10 @@ Deno.serve(async (request: Request) => {
   }
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (request.method !== "POST") return reply({ error: "Solicitud no válida." }, 405);
+  const contentLength = Number(request.headers.get("content-length") ?? "0");
+  if (Number.isFinite(contentLength) && contentLength > 4096) {
+    return reply({ error: "Solicitud demasiado grande." }, 413);
+  }
 
   let input: { employeeNumber?: unknown; password?: unknown };
   try { input = await request.json(); } catch { return reply({ error: "Solicitud no válida." }, 400); }
@@ -47,6 +51,12 @@ Deno.serve(async (request: Request) => {
   if (userError || !email) return reply({ error: "Número de empleado o contraseña incorrectos." }, 401);
 
   const { data, error } = await auth.auth.signInWithPassword({ email, password });
+  if (error?.status === 429) {
+    return new Response(JSON.stringify({ error: "Demasiados intentos. Espera antes de volver a intentarlo." }), {
+      status: 429,
+      headers: { ...corsHeaders, "Retry-After": "60" },
+    });
+  }
   if (error || !data.session) return reply({ error: "Número de empleado o contraseña incorrectos." }, 401);
   return reply({
     access_token: data.session.access_token,
