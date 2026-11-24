@@ -74,4 +74,5 @@ grant execute on function public.next_employee_number(public.app_role) to servic
 
 -- Prevent browser clients from changing roles, activation state or delegated admin authority.
 revoke update on public.profiles from authenticated;
+revoke update (employee_number, display_name, role, is_active) on public.profiles from authenticated;
 grant update (display_name) on public.profiles to authenticated;
