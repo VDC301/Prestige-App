@@ -82,7 +82,8 @@ Deno.serve(async (request: Request) => {
   const url = Deno.env.get("SUPABASE_URL");
   const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!url || !anonKey || !serviceKey) {
+  const redirectTo = Deno.env.get("APP_REDIRECT_URL");
+  if (!url || !anonKey || !serviceKey || !redirectTo) {
     return response({ error: "El servicio de invitaciones no está configurado." }, 503, allowedOrigin);
   }
 
@@ -114,7 +115,7 @@ Deno.serve(async (request: Request) => {
   const employeeNumber = numberData;
 
   const { data: invitation, error: invitationError } = await adminClient.auth.admin
-    .inviteUserByEmail(email, { data: { display_name: displayName, employee_number: employeeNumber } });
+    .inviteUserByEmail(email, { redirectTo, data: { display_name: displayName, employee_number: employeeNumber } });
   if (invitationError || !invitation.user) {
     return response({ error: "No se pudo enviar la invitación. Verifica si el correo ya tiene una cuenta." }, 400, allowedOrigin);
   }
