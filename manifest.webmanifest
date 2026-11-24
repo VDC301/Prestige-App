@@ -1,0 +1,14 @@
+{
+  "name": "Prestige Landscaping & Cleaning",
+  "short_name": "Prestige",
+  "description": "Portal interno del equipo Prestige.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f3",
+  "theme_color": "#173d32",
+  "icons": [
+    {"src":"./assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
