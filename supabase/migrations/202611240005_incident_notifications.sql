@@ -23,7 +23,7 @@ create policy "users mark own notifications read" on public.notifications
  using (public.is_active_user() and recipient_id=(select auth.uid()))
  with check (public.is_active_user() and recipient_id=(select auth.uid()));
 
-grant select, update on public.notifications to authenticated;
+grant select, update (read_at) on public.notifications to authenticated;
 
 drop policy if exists "department members report incidents" on public.incidents;
 create policy "department supervisors report incidents" on public.incidents
