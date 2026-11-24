@@ -177,8 +177,8 @@ datos y nunca al navegador. Los privilegios `REFERENCES` y `TRIGGER`
 tampoco son necesarios para clientes.
 
 La migración 018 revoca esos tres privilegios en las tablas existentes y
-ajusta los privilegios predeterminados de los roles `postgres` y
-`supabase_admin` para que las tablas futuras no los vuelvan a conceder
+ajusta los privilegios predeterminados del rol `postgres` que ejecuta las
+migraciones de este proyecto para que las tablas futuras no los vuelvan a conceder
 automáticamente a `anon` o `authenticated`. No modifica los permisos
 normales de lectura/escritura que se controlan mediante RLS.
 
