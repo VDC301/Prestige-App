@@ -16,19 +16,22 @@ jobs:
         run: node --check app.js
       - name: Validar manifiesto PWA
         run: node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
-      - name: Verificar archivos esenciales
+      - name: Verificar archivos esenciales y migraciones
         run: |
           test -f index.html
           test -f styles.css
           test -f app.js
           test -f sw.js
-          test -f supabase/migrations/202611240001_initial_schema.sql
-          test -f supabase/migrations/202611240013_login_rate_limit.sql
-          test -f supabase/migrations/202611240014_supporting_fk_indexes.sql
-          test -f supabase/migrations/202611240015_serialize_department_assignments.sql
-          test -f supabase/migrations/202611240016_team_assignment_integrity.sql
-          test -f supabase/migrations/202611240017_operational_link_integrity.sql
-          test -f supabase/migrations/202611240018_revoke_rls_bypass_table_privileges.sql
+          for version in $(seq -w 1 18); do
+            test -f "supabase/migrations/2026112400${version}_"*.sql
+          done
+          grep -q 'revoke select on public.profiles from authenticated' supabase/migrations/202611240011_profile_directory_privacy.sql
+          grep -q 'create or replace function public.get_my_profile()' supabase/migrations/202611240011_profile_directory_privacy.sql
+          grep -q 'alter function public.is_active_user() set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'alter function public.is_admin() set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'alter function public.has_department_access(uuid) set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'alter function public.can_view_employee(uuid) set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'alter function public.can_manage_department(uuid) set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
           grep -q 'validate_team_member_department_link' supabase/migrations/202611240017_operational_link_integrity.sql
           grep -q 'An employee assigned to a team shift must be a member of that team' supabase/migrations/202611240017_operational_link_integrity.sql
           grep -q 'incident team must match the team linked to its shift' supabase/migrations/202611240017_operational_link_integrity.sql
