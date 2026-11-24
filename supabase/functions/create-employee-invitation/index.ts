@@ -1,3 +1,4 @@
+import { readJsonLimited } from "../_shared/request.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 type AppRole = "admin" | "manager" | "supervisor" | "employee";
@@ -17,34 +18,6 @@ async function hmacSha256(secret: string, value: string): Promise<string> {
   );
   const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(value));
   return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, "0")).join("");
-}
-
-async function readJsonLimited(request: Request, maxBytes: number): Promise<unknown> {
-  const declaredLength = Number(request.headers.get("content-length") ?? "0");
-  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
-    throw new Error("REQUEST_TOO_LARGE");
-  }
-  if (!request.body) throw new Error("INVALID_JSON");
-  const reader = request.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let totalBytes = 0;
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    totalBytes += value.byteLength;
-    if (totalBytes > maxBytes) {
-      await reader.cancel().catch(() => undefined);
-      throw new Error("REQUEST_TOO_LARGE");
-    }
-    chunks.push(value);
-  }
-  const bytes = new Uint8Array(totalBytes);
-  let offset = 0;
-  for (const chunk of chunks) {
-    bytes.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-  return JSON.parse(new TextDecoder().decode(bytes));
 }
 
 Deno.serve(async (request: Request) => {
