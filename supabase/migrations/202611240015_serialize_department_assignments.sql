@@ -4,7 +4,7 @@ create or replace function public.enforce_department_assignment_rules()
 returns trigger
 language plpgsql
 security definer
-set search_path = public
+set search_path = pg_catalog, public
 as $$
 declare
   existing_count integer;
