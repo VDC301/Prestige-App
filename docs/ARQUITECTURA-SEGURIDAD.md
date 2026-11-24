@@ -46,3 +46,33 @@ El modo offline de producción requiere almacenamiento local protegido, cola de 
 - Los clientes autenticados no pueden modificar el rol, el estado activo, el número de empleado ni la delegación administrativa de un perfil.
 
 Estas migraciones y funciones están en la rama de desarrollo. No se han aplicado las migraciones 008–010 al proyecto Supabase ni se han desplegado las funciones nuevas.
+
+## Funciones internas de políticas RLS (migración 012)
+
+Los helpers `is_active_user`, `is_admin`, `has_department_access`,
+`can_view_employee` y `can_manage_department` se trasladan al esquema
+`private`. Conservan `SECURITY DEFINER` porque consultan perfiles y
+asignaciones protegidos por RLS; convertirlos a `SECURITY INVOKER` causaría
+recursión o pérdida de visibilidad en las políticas.
+
+El esquema `private` no debe añadirse a los esquemas expuestos por la API
+(PostgREST). Se concede únicamente el uso y la ejecución necesarios para que
+las políticas RLS puedan evaluar esos helpers. Las funciones dejan de estar
+disponibles como RPC dentro del esquema público.
+
+## Configuración pendiente en Supabase Auth
+
+Antes de habilitar el acceso real, activar **Leaked password protection** en
+Authentication → Settings → Password Security. La protección comprueba
+contraseñas comprometidas y reduce el riesgo de credenciales reutilizadas.
+
+La función `employee-login` devuelve HTTP 429 cuando Supabase Auth limita
+intentos, e incluye `Retry-After`. Esto complementa —no sustituye— los
+límites de solicitudes configurados en Auth y en la plataforma.
+
+## Estado de despliegue
+
+Las migraciones 008–012 y las Edge Functions están en la rama de desarrollo.
+La prueba SQL combinada se ejecutó dentro de una transacción revertida.
+No se han aplicado estas migraciones al proyecto activo ni se han desplegado
+las funciones.
