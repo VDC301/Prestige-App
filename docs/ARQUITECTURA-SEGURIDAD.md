@@ -45,7 +45,7 @@ El modo offline de producción requiere almacenamiento local protegido, cola de 
 - La Edge Function `manage-admin-delegation` permite cambiar la delegación de otro administrador únicamente a quien tenga esa facultad. El cambio y su auditoría se ejecutan dentro de una misma transacción SQL.
 - Los clientes autenticados no pueden modificar el rol, el estado activo, el número de empleado ni la delegación administrativa de un perfil.
 
-Estas migraciones y funciones están en la rama de desarrollo. No se han aplicado las migraciones 008–010 al proyecto Supabase ni se han desplegado las funciones nuevas.
+Estas migraciones y funciones están en la rama de desarrollo. No se han aplicado las migraciones 008–013 al proyecto Supabase ni se han desplegado las funciones nuevas.
 
 ## Funciones internas de políticas RLS (migración 012)
 
