@@ -12,6 +12,38 @@ const reply = (body: unknown, status: number, origin: string) =>
     },
   });
 
+async function hmacSha256(secret: string, value: string): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function readJsonLimited(request: Request, maxBytes: number): Promise<unknown> {
+  const declaredLength = Number(request.headers.get("content-length") ?? "0");
+  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) throw new Error("REQUEST_TOO_LARGE");
+  if (!request.body) throw new Error("INVALID_JSON");
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    totalBytes += value.byteLength;
+    if (totalBytes > maxBytes) {
+      await reader.cancel().catch(() => undefined);
+      throw new Error("REQUEST_TOO_LARGE");
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
 Deno.serve(async (request: Request) => {
   const allowedOrigin = Deno.env.get("APP_ORIGIN");
   const origin = request.headers.get("Origin") ?? "";
@@ -32,8 +64,12 @@ Deno.serve(async (request: Request) => {
   if (!token) return reply({ error: "Sesión requerida." }, 401, allowedOrigin);
 
   let input: { employeeNumber?: unknown; canManageAdmins?: unknown };
-  try { input = await request.json(); }
-  catch { return reply({ error: "Solicitud no válida." }, 400, allowedOrigin); }
+  try { input = await readJsonLimited(request, 4096) as typeof input; }
+  catch (error) {
+    return error instanceof Error && error.message === "REQUEST_TOO_LARGE"
+      ? reply({ error: "Solicitud demasiado grande." }, 413, allowedOrigin)
+      : reply({ error: "Solicitud no válida." }, 400, allowedOrigin);
+  }
   const employeeNumber = typeof input.employeeNumber === "string"
     ? input.employeeNumber.trim().toUpperCase() : "";
   if (!/^ADM-[0-9]{3,}$/.test(employeeNumber) || typeof input.canManageAdmins !== "boolean") {
@@ -55,6 +91,36 @@ Deno.serve(async (request: Request) => {
     .eq("id", authData.user.id).maybeSingle();
   if (actorError || !actor || actor.role !== "admin" || !actor.is_active || actor.can_manage_admins !== true) {
     return reply({ error: "No tienes autorización para modificar permisos administrativos." }, 403, allowedOrigin);
+  }
+
+  try {
+    const bucket = await hmacSha256(serviceKey, `prestige-admin-delegation:v1:${actor.id}`);
+    const { data: limit, error: limitError } = await admin.rpc("consume_login_rate_limit", {
+      p_bucket_key: bucket, p_limit: 60, p_window_seconds: 900,
+    });
+    if (limitError || typeof limit?.allowed !== "boolean") {
+      console.error("Admin delegation rate-limit check failed.");
+      return reply({ error: "El servicio de permisos no está disponible temporalmente." }, 503, allowedOrigin);
+    }
+    if (!limit.allowed) {
+      const retryAfter = Math.max(1, Number(limit.retry_after_seconds) || 60);
+      return new Response(JSON.stringify({
+        error: "Se alcanzó el límite de cambios administrativos. Espera antes de volver a intentarlo.",
+      }), {
+        status: 429,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": allowedOrigin,
+          "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Retry-After": String(retryAfter),
+          "Vary": "Origin",
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Admin delegation rate-limit check failed:", error);
+    return reply({ error: "No se pudo verificar el límite de cambios." }, 503, allowedOrigin);
   }
 
   const { data: result, error: permissionError } = await admin.rpc("set_admin_delegation_permission", {
