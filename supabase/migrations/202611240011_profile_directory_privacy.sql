@@ -2,6 +2,7 @@
 -- fields are returned by a SECURITY DEFINER function scoped to auth.uid().
 drop policy if exists "users view own profile" on public.profiles;
 drop policy if exists "users view permitted profiles" on public.profiles;
+drop policy if exists "admins manage profiles" on public.profiles;
 create policy "users view permitted profiles" on public.profiles
  for select to authenticated
  using (public.is_active_user() and public.can_view_employee(id));
