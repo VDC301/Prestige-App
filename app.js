@@ -1,6 +1,6 @@
 const SUPABASE_URL = "https://kscrpzpxczeaodpvqibu.supabase.co";
 const SUPABASE_PUBLIC_KEY = "sb_publishable_ZdIpq_JrIxj8MgoyM7w_2g_IeqsnNE2";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
+const supabase = window.supabase?.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
 });
 
@@ -230,13 +230,13 @@ $("login-form").addEventListener("submit",async event=>{
   }
 });
 
-$("invite-role")?.addEventListener("change",()=>{
-  const isAdmin=$("invite-role").value==="admin";
-  $("department-fields").hidden=isAdmin;
-  const delegation=$("admin-delegation-option");
-  if(delegation) delegation.hidden=!isAdmin;
-});
 document.addEventListener("change",event=>{
+  if(event.target.id==="invite-role") {
+    const isAdmin=event.target.value==="admin";
+    $("department-fields").hidden=isAdmin;
+    const delegation=$("admin-delegation-option");
+    if(delegation) delegation.hidden=!isAdmin;
+  }
   if(event.target.matches('input[name="department"]')) {
     const selected=[...document.querySelectorAll('input[name="department"]:checked')];
     $("second-department-reason").hidden=selected.length<2;
@@ -297,6 +297,7 @@ function updateConnection() {
 window.addEventListener("online",updateConnection);
 window.addEventListener("offline",updateConnection);
 updateConnection();
+$("today-label").textContent=new Intl.DateTimeFormat("es-US",{weekday:"long",month:"long",day:"numeric"}).format(new Date()).toLocaleUpperCase("es-US");
 
 (async()=>{
   if(!window.supabase) {
