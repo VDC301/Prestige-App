@@ -44,3 +44,13 @@ Deno.test("readJsonLimited rejects requests without a body", async () => {
   catch (error) { rejected = error instanceof Error && error.message === "INVALID_JSON"; }
   if (!rejected) throw new Error("Expected a missing body to be rejected.");
 });
+
+Deno.test("readJsonLimited rejects zero, negative, fractional, and unsafe limits", async () => {
+  const request = new Request("https://example.test", { method: "POST", body: "{}" });
+  for (const limit of [0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1, Number.NaN]) {
+    let rejected = false;
+    try { await readJsonLimited(request.clone(), limit); }
+    catch (error) { rejected = error instanceof Error && error.message === "INVALID_LIMIT"; }
+    if (!rejected) throw new Error(`Expected invalid limit ${String(limit)} to be rejected.`);
+  }
+});
