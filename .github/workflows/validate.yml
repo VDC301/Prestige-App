@@ -36,7 +36,3 @@ jobs:
           deno check supabase/functions/employee-login/index.ts
           deno check supabase/functions/create-employee-invitation/index.ts
           deno check supabase/functions/manage-admin-delegation/index.ts
-        run: |
-          deno check supabase/functions/employee-login/index.ts
-          deno check supabase/functions/create-employee-invitation/index.ts
-          deno check supabase/functions/manage-admin-delegation/index.ts
