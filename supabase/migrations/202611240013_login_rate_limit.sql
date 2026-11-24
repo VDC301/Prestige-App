@@ -68,3 +68,23 @@ revoke all on function private.consume_login_rate_limit(text, integer, integer)
   from public, anon, authenticated;
 grant execute on function private.consume_login_rate_limit(text, integer, integer)
   to service_role;
+
+-- Expose a narrowly granted, SECURITY INVOKER RPC entry point for PostgREST.
+-- The actual table access remains inside the private SECURITY DEFINER routine.
+create or replace function public.consume_login_rate_limit(
+  p_bucket_key text,
+  p_limit integer,
+  p_window_seconds integer
+)
+returns jsonb
+language sql
+security invoker
+set search_path = public, private
+as $$
+  select private.consume_login_rate_limit(p_bucket_key, p_limit, p_window_seconds);
+$$;
+
+revoke all on function public.consume_login_rate_limit(text, integer, integer)
+  from public, anon, authenticated;
+grant execute on function public.consume_login_rate_limit(text, integer, integer)
+  to service_role;
