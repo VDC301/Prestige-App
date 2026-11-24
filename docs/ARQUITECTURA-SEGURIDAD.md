@@ -137,3 +137,34 @@ entorno de desarrollo antes de aplicarse al proyecto activo.
 
 La migración 016 está preparada en la rama de desarrollo y requiere pruebas
 en un entorno aislado antes de su aplicación.
+
+
+## Integridad operativa y concurrencia (migración 017)
+
+La migración 017 refuerza las relaciones entre asignaciones departamentales,
+equipos, miembros, turnos e incidencias:
+
+- Cada miembro de un equipo debe tener un perfil activo y una asignación al
+  departamento del equipo. La regla se aplica también al modificar o retirar
+  miembros.
+- Un turno con empleado y equipo exige que ese empleado forme parte del equipo.
+  El equipo debe estar activo y pertenecer al departamento del turno.
+- El reportante de una incidencia debe estar activo y tener acceso por
+  asignación al departamento, salvo Administración. La persona asignada debe
+  estar activa y pertenecer al mismo departamento.
+- Si una incidencia vincula equipo y turno, ambos deben referirse al mismo
+  equipo y departamento.
+- Los triggers bloquean las filas de perfil implicadas para serializar altas
+  operativas con la retirada de asignaciones departamentales. También bloquean
+  las filas de equipos/turnos relacionadas para impedir cambios simultáneos
+  que invaliden los vínculos.
+- Las funciones de trigger usan SECURITY DEFINER con search_path controlado y
+  ejecución directa revocada a los roles de API; las políticas RLS siguen
+  siendo responsables de autorizar quién puede iniciar cada operación.
+
+La migración 017 está preparada en la rama de desarrollo. El CI comprueba su
+presencia y reglas esenciales, pero esas comprobaciones estáticas no sustituyen
+pruebas reales de PostgreSQL. Antes de aplicarla se deben ejecutar pruebas
+transaccionales en un proyecto aislado que cubran altas válidas e inválidas,
+actualizaciones, eliminaciones y operaciones concurrentes. No se ha aplicado
+al proyecto Supabase activo.
