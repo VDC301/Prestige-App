@@ -66,13 +66,26 @@ Antes de habilitar el acceso real, activar **Leaked password protection** en
 Authentication → Settings → Password Security. La protección comprueba
 contraseñas comprometidas y reduce el riesgo de credenciales reutilizadas.
 
-La función `employee-login` devuelve HTTP 429 cuando Supabase Auth limita
-intentos, e incluye `Retry-After`. Esto complementa —no sustituye— los
-límites de solicitudes configurados en Auth y en la plataforma.
+La función `employee-login` aplica un límite adicional de **300 solicitudes
+por dirección IP en 15 minutos** antes de consultar el número de empleado.
+Usa únicamente el encabezado de IP de origen `CF-Connecting-IP` que añade
+Cloudflare; no confía en `X-Forwarded-For` enviado por el cliente. El valor
+se transforma mediante HMAC usando la clave service-role, por lo que la tabla
+privada conserva una huella y no la dirección IP original. La tabla y su RPC
+no son accesibles a los roles públicos; el endpoint público solo expone una
+función invoker concedida a service_role.
+
+Si el encabezado de IP no está disponible o falla el control de frecuencia,
+el login falla de forma cerrada con HTTP 503; al exceder el límite responde
+HTTP 429 con `Retry-After`. Supabase Auth mantiene además sus propios límites
+para intentos de contraseña. El umbral IP es compartido por personas que
+utilicen la misma conexión de salida, por lo que debe revisarse con tráfico
+real antes de producción. La limpieza de huellas vencidas se realiza de forma
+oportunista dentro de la función SQL.
 
 ## Estado de despliegue
 
-Las migraciones 008–012 y las Edge Functions están en la rama de desarrollo.
-La prueba SQL combinada se ejecutó dentro de una transacción revertida.
+Las migraciones 008–013 y las Edge Functions están en la rama de desarrollo.
+Las pruebas SQL se ejecutaron dentro de transacciones revertidas.
 No se han aplicado estas migraciones al proyecto activo ni se han desplegado
 las funciones.
