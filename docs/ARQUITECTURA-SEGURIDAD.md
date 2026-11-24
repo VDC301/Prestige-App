@@ -83,6 +83,19 @@ utilicen la misma conexión de salida, por lo que debe revisarse con tráfico
 real antes de producción. La limpieza de huellas vencidas se realiza de forma
 oportunista dentro de la función SQL.
 
+## Protección de operaciones administrativas
+
+Las funciones de invitación y delegación limitan el tamaño del cuerpo de cada
+solicitud antes de procesar JSON. La creación de invitaciones aplica cuotas
+independientes mediante el limitador privado: hasta 30 solicitudes por
+administrador cada 15 minutos y hasta 5 invitaciones por dirección de correo
+cada 24 horas. La modificación de delegaciones administrativas se limita a
+60 solicitudes por administrador cada 15 minutos. Las claves son huellas
+HMAC; la tabla privada no almacena directamente identificadores de usuario ni
+direcciones de correo. Si el control no está disponible, estas operaciones
+fallan de forma cerrada. Los límites deben revisarse con el uso real para
+evitar fricción operativa.
+
 ## Estado de despliegue
 
 Las migraciones 008–014 y las Edge Functions están en la rama de desarrollo.
