@@ -123,7 +123,9 @@ entorno de desarrollo antes de aplicarse al proyecto activo.
 ## Integridad de equipos y asignaciones (migración 016)
 
 - El supervisor asignado a un equipo debe tener perfil activo, rol de
-  Supervisión y una asignación vigente al mismo departamento.
+  Supervisión y una asignación vigente al mismo departamento. Los triggers
+  validan estas relaciones con funciones SECURITY DEFINER de búsqueda
+  controlada para que RLS no oculte registros relacionados al comprobarlas.
 - Un equipo no puede cambiar de departamento si conserva miembros sin
   asignación al departamento nuevo o si tiene turnos/incidencias vinculados
   al departamento anterior.
