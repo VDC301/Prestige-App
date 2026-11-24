@@ -1,0 +1,25 @@
+name: Validar portal
+
+on:
+  push:
+    branches: [main, tech-foundation]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v4
+      - name: Validar JavaScript del portal
+        run: node --check app.js
+      - name: Validar manifiesto PWA
+        run: node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
+      - name: Verificar archivos esenciales
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f app.js
+          test -f sw.js
+          test -f supabase/migrations/202611240001_initial_schema.sql
