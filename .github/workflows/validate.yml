@@ -1,0 +1,55 @@
+name: Validar portal
+
+on:
+  push:
+    branches: [main, tech-foundation]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v4
+      - name: Validar JavaScript del portal
+        run: node --check app.js
+      - name: Validar manifiesto PWA
+        run: node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8'))"
+      - name: Verificar archivos esenciales y migraciones
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f app.js
+          test -f sw.js
+          for version in $(seq -w 1 18); do
+            test -f "supabase/migrations/2026112400${version}_"*.sql
+          done
+          grep -q 'revoke update on public.profiles from authenticated' supabase/migrations/202611240008_admin_account_controls.sql
+          grep -q 'grant update (display_name) on public.profiles to authenticated' supabase/migrations/202611240008_admin_account_controls.sql
+          grep -q 'create or replace function public.current_user_can_manage_admins()' supabase/migrations/202611240009_current_admin_capability.sql
+          grep -q 'create or replace function public.set_admin_delegation_permission' supabase/migrations/202611240010_atomic_admin_delegation.sql
+          grep -q 'revoke select on public.profiles from authenticated' supabase/migrations/202611240011_profile_directory_privacy.sql
+          grep -q 'create or replace function public.get_my_profile()' supabase/migrations/202611240011_profile_directory_privacy.sql
+          grep -q 'alter function public.is_active_user() set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'alter function public.is_admin() set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'alter function public.has_department_access(uuid) set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'alter function public.can_view_employee(uuid) set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'alter function public.can_manage_department(uuid) set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
+          grep -q 'validate_team_member_department_link' supabase/migrations/202611240017_operational_link_integrity.sql
+          grep -q 'An employee assigned to a team shift must be a member of that team' supabase/migrations/202611240017_operational_link_integrity.sql
+          grep -q 'incident team must match the team linked to its shift' supabase/migrations/202611240017_operational_link_integrity.sql
+          grep -q 'for update' supabase/migrations/202611240017_operational_link_integrity.sql
+          grep -q 'REVOKE TRUNCATE, REFERENCES, TRIGGER' supabase/migrations/202611240018_revoke_rls_bypass_table_privileges.sql
+          grep -q 'ALTER DEFAULT PRIVILEGES FOR ROLE postgres' supabase/migrations/202611240018_revoke_rls_bypass_table_privileges.sql
+
+      - name: Configurar Deno para Edge Functions
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verificar Edge Functions
+        run: |
+          deno test supabase/functions/_shared/request_test.ts
+          deno check supabase/functions/employee-login/index.ts
+          deno check supabase/functions/create-employee-invitation/index.ts
+          deno check supabase/functions/manage-admin-delegation/index.ts

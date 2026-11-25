@@ -11,7 +11,22 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="app-shell">
+  <section id="login-screen" class="login-screen">
+    <form id="login-form" class="login-card">
+      <div class="login-brand"><span class="brand-name">PRESTIGE</span><span class="brand-subtitle">LANDSCAPING &amp; CLEANING</span></div>
+      <p class="eyebrow">PORTAL DEL EQUIPO</p>
+      <h1>Bienvenido</h1>
+      <p class="muted">Inicia sesión con tu número de empleado y contraseña.</p>
+      <label for="employee-number">Número de empleado</label>
+      <input id="employee-number" name="employeeNumber" autocomplete="username" placeholder="Ej. EMP-001" required maxlength="32">
+      <label for="employee-password">Contraseña</label>
+      <input id="employee-password" name="password" type="password" autocomplete="current-password" required maxlength="256">
+      <p id="login-error" class="form-error" role="alert" hidden></p>
+      <button class="primary-button full" type="submit" id="login-submit">Iniciar sesión</button>
+      <p class="login-footnote">Si todavía no tienes acceso, solicita una invitación a Administración.</p>
+    </form>
+  </section>
+  <div class="app-shell" id="app-shell" hidden>
     <header class="topbar">
       <a class="brand" href="./" aria-label="Prestige, inicio">
         <span class="brand-name">PRESTIGE</span>
@@ -30,7 +45,7 @@
           <h1 id="greeting">Bienvenido a Prestige</h1>
           <p class="muted" id="welcome-copy">Todo lo que necesitas para tu jornada, en un solo lugar.</p>
         </div>
-        <span class="demo-pill">Vista de demostración</span>
+        <span class="demo-pill" id="session-pill">Sesión protegida</span>
       </section>
 
       <section class="workspace">
@@ -53,7 +68,7 @@
           <div class="sidebar-bottom">
             <span class="small-label">DEPARTAMENTO ACTIVO</span>
             <strong id="department-label">Administración</strong>
-            <button class="text-button" id="switch-department">Cambiar vista de demostración</button>
+            <button class="text-button" id="switch-department" hidden>Vista de demostración</button>
           </div>
         </aside>
 
@@ -84,6 +99,7 @@
       <button class="primary-button full" id="apply-profile" value="apply">Aplicar perfil</button>
     </form>
   </dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./app.js" defer></script>
 </body>
 </html>
