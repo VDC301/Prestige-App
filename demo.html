@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173d32"><title>Prestige | Demostración interactiva</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#203129;background:#f3f6f2;--g:#173d32;--g2:#2c604d;--line:#e2e9e2;--muted:#738078}*{box-sizing:border-box}body{margin:0}.top{background:white;border-bottom:1px solid var(--line);padding:15px 4vw;display:flex;align-items:center;justify-content:space-between;gap:15px;position:sticky;top:0;z-index:3}.brand{font-weight:850;letter-spacing:3px;color:var(--g);font-size:21px}.brand small{display:block;font-size:8px;letter-spacing:2px;color:#758278;margin-top:3px}.demo{font-size:11px;color:#80683e;background:#f6efdf;border-radius:20px;padding:8px 12px}.wrap{max-width:1400px;margin:auto;padding:28px 4vw}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.eyebrow{font-size:10px;letter-spacing:1.8px;color:#8b988f;font-weight:750}.hero h1{font-size:clamp(24px,4vw,34px);margin:7px 0}.sub{color:var(--muted);font-size:13px}.profile{display:flex;gap:8px;align-items:center}.profile select,button,input,textarea{font:inherit}.profile select{padding:10px;border:1px solid var(--line);border-radius:8px;background:white}.layout{display:grid;grid-template-columns:230px 1fr;gap:18px}.side,.main,.card{background:white;border:1px solid var(--line);border-radius:12px}.side{padding:15px;height:max-content;position:sticky;top:85px}.person{padding:8px 5px 18px;border-bottom:1px solid var(--line);margin-bottom:12px}.person b,.person small{display:block}.person small{color:var(--muted);font-size:11px;margin-top:4px}.nav{display:grid;gap:4px}.nav button{border:0;background:white;text-align:left;padding:11px;border-radius:8px;color:#56645a;cursor:pointer;font-size:12px}.nav button.active,.nav button:hover{background:#edf3ee;color:var(--g);font-weight:700}.sidefoot{border-top:1px solid var(--line);padding:15px 5px 0;margin-top:15px;font-size:11px}.main{padding:24px;min-height:620px}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:20px}.head h2{font-size:21px;margin:0 0 5px}.head p{font-size:12px;color:var(--muted);margin:0}.btn{border:0;border-radius:8px;padding:10px 14px;background:var(--g);color:white;cursor:pointer;font-size:12px;font-weight:650}.btn.alt{background:#edf3ee;color:var(--g)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:15px}.stat,.card{padding:17px}.stat small{font-size:11px;color:var(--muted)}.stat strong{display:block;font-size:27px;margin:8px 0 3px;color:var(--g)}.stat span{font-size:10px;color:var(--muted)}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:13px}.card h3{font-size:13px;margin:0 0 13px}.row{padding:12px 0;border-top:1px solid #edf1ed;font-size:12px;display:flex;justify-content:space-between;gap:12px;align-items:center}.row:first-of-type{border-top:0}.row small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.tag{font-size:10px;background:#edf3ee;color:#3e7056;border-radius:20px;padding:5px 8px;white-space:nowrap}.tag.gold{background:#f7f0e4;color:#94713d}.notice{padding:13px;background:#faf7ef;border:1px solid #eee6d7;border-radius:8px;color:#78694f;font-size:11px;line-height:1.5;margin-top:14px}.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:9px;font-size:12px}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{text-align:left;padding:12px 8px;border-bottom:1px solid var(--line)}.table th{font-size:10px;color:var(--muted)}.modal{position:fixed;inset:0;background:#14271e77;display:none;place-items:center;padding:18px;z-index:5}.modal.show{display:grid}.dialog{width:min(520px,100%);background:white;border-radius:14px;padding:22px;max-height:90vh;overflow:auto}.dialog h3{margin:0 0 15px}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;font-weight:700}.field input,.field select,.field textarea{padding:11px;border:1px solid var(--line);border-radius:8px;width:100%;background:white}.field textarea{min-height:90px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.hint{font-size:10px;color:var(--muted)}.mobilebar{display:none}footer{text-align:center;color:#89958d;font-size:10px;padding:24px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.side{position:static;padding:10px}.person,.sidefoot{display:none}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.main{padding:17px}.grid{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.profile{width:100%;flex-wrap:wrap}.profile select{flex:1}.stats{gap:7px}.stat{padding:12px}.stat strong{font-size:22px}}
+@media(max-width:480px){.top{padding:13px 17px}.brand{font-size:18px}.wrap{padding:20px 12px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.head{flex-direction:column}.head .btn{width:100%}.table{min-width:560px}.tablebox{overflow:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">PRESTIGE<small>LANDSCAPING &amp; CLEANING</small></div><span class="demo">MODO DEMOSTRACIÓN · DATOS FICTICIOS</span></header>
+<div class="wrap">
+<section class="hero"><div><div class="eyebrow">PORTAL INTERNO · VISTA PREVIA</div><h1 id="greeting">Bienvenido a Prestige</h1><div class="sub" id="subtitle">Operaciones y comunicación del equipo, en un solo lugar.</div></div>
+<div class="profile"><label for="profile">Ver como:</label><select id="profile"><option value="admin">Administración · ADM-000</option><option value="manager-land">Gerencia · Landscaping</option><option value="manager-clean">Gerencia · Cleaning</option><option value="super-land">Supervisor · Landscaping</option><option value="super-clean">Supervisor · Cleaning</option><option value="employee-land">Empleado · Landscaping</option><option value="employee-clean">Empleado · Cleaning</option><option value="employee-both">Empleado autorizado · Ambos</option></select></div></section>
+<div class="layout"><aside class="side"><div class="person"><b id="person-name">Prestige</b><small id="person-role">Administración · ADM-000</small></div><nav class="nav" id="nav"></nav><div class="sidefoot">DEPARTAMENTO ACTIVO<br><b id="dept-label">Todos los departamentos</b></div></aside><main class="main" id="view" aria-live="polite"></main></div>
+<div class="notice"><b>Importante:</b> esta demostración guarda los cambios únicamente en este navegador. No crea cuentas, no envía correos y no modifica la base de datos real de Prestige.</div>
+</div><footer>PRESTIGE LANDSCAPING &amp; CLEANING · DEMOSTRACIÓN INTERACTIVA</footer>
+<div class="modal" id="modal"><form class="dialog" id="record-form"><h3 id="modal-title">Nuevo registro</h3><div id="fields"></div><div class="actions"><button type="button" class="btn alt" id="cancel">Cancelar</button><button class="btn" type="submit">Guardar en demostración</button></div></form></div>
+<script>
+const $=id=>document.getElementById(id);
+const modules=[["inicio","⌂","Inicio"],["comunicados","▤","Comunicados oficiales"],["conversaciones","☷","Conversaciones"],["turnos","◷","Turnos y horarios"],["equipos","♧","Equipos"],["incidencias","⚑","Incidencias"],["personal","♙","Personal"]];
+const profiles={
+ admin:{name:"Prestige",role:"Administración",number:"ADM-000",dept:"Todos los departamentos",depts:["Landscaping","Cleaning"],views:modules.map(x=>x[0])},
+ "manager-land":{name:"María González",role:"Gerencia",number:"GER-001",dept:"Landscaping",depts:["Landscaping"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "manager-clean":{name:"Carlos Rivera",role:"Gerencia",number:"GER-002",dept:"Cleaning",depts:["Cleaning"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "super-land":{name:"José Martínez",role:"Supervisor",number:"SUP-001",dept:"Landscaping",depts:["Landscaping"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "super-clean":{name:"Ana López",role:"Supervisor",number:"SUP-002",dept:"Cleaning",depts:["Cleaning"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "employee-land":{name:"Luis Pérez",role:"Empleado",number:"EMP-001",dept:"Landscaping",depts:["Landscaping"],views:["inicio","comunicados","conversaciones","turnos","equipos"]},
+ "employee-clean":{name:"Sofía Torres",role:"Empleado",number:"EMP-002",dept:"Cleaning",depts:["Cleaning"],views:["inicio","comunicados","conversaciones","turnos","equipos"]},
+ "employee-both":{name:"Miguel Díaz",role:"Empleado autorizado",number:"EMP-003",dept:"Landscaping + Cleaning",depts:["Landscaping","Cleaning"],views:["inicio","comunicados","conversaciones","turnos","equipos"]}
+};
+const seed={
+ comunicados:[
+ {id:1,dept:"Todos",title:"Bienvenidos al portal Prestige",body:"Usaremos este espacio para avisos oficiales, políticas y novedades importantes.",date:"Hoy",by:"Administración"},
+ {id:2,dept:"Landscaping",title:"Preparación de equipos",body:"Revisar herramientas y equipo antes de salir a los servicios.",date:"Hoy",by:"Administración"},
+ {id:3,dept:"Cleaning",title:"Lista de suministros",body:"Confirmar los suministros necesarios antes del primer servicio.",date:"Ayer",by:"Administración"}],
+ conversaciones:[
+ {id:1,dept:"Landscaping",title:"Rutas de esta semana",body:"¿Alguien tiene sugerencias para organizar mejor las rutas?",date:"Hoy",by:"José Martínez"},
+ {id:2,dept:"Cleaning",title:"Productos para superficies",body:"Compartamos recomendaciones y experiencias del equipo.",date:"Ayer",by:"Ana López"}],
+ turnos:[
+ {id:1,code:"TUR-2026-001",dept:"Landscaping",title:"Residencia Green",date:"2026-11-25",time:"08:00",team:"Equipo Norte",status:"Programado"},
+ {id:2,code:"TUR-2026-002",dept:"Cleaning",title:"Oficinas Central",date:"2026-11-25",time:"09:00",team:"Equipo Limpieza A",status:"Programado"},
+ {id:3,code:"TUR-2026-003",dept:"Landscaping",title:"Complejo Oak",date:"2026-11-26",time:"07:30",team:"Equipo Sur",status:"Programado"}],
+ equipos:[
+ {id:1,dept:"Landscaping",title:"Equipo Norte",body:"Supervisor: José Martínez · 4 integrantes"},
+ {id:2,dept:"Landscaping",title:"Equipo Sur",body:"Supervisor: Roberto Cruz · 3 integrantes"},
+ {id:3,dept:"Cleaning",title:"Equipo Limpieza A",body:"Supervisora: Ana López · 3 integrantes"}],
+ incidencias:[
+ {id:1,dept:"Landscaping",title:"Herramienta faltante",body:"Se reportó la ausencia de una podadora al finalizar el servicio.",date:"Hoy",status:"En revisión",by:"José Martínez"},
+ {id:2,dept:"Cleaning",title:"Daño en propiedad",body:"Se documentó una marca accidental en una pared. Se notificó a Gerencia.",date:"Ayer",status:"Cerrada",by:"Ana López"}],
+ personal:[
+ {id:1,number:"ADM-000",name:"Prestige",role:"Administración",dept:"Todos",status:"Activo"},
+ {id:2,number:"GER-001",name:"María González",role:"Gerencia",dept:"Landscaping",status:"Activo"},
+ {id:3,number:"GER-002",name:"Carlos Rivera",role:"Gerencia",dept:"Cleaning",status:"Activo"},
+ {id:4,number:"SUP-001",name:"José Martínez",role:"Supervisor",dept:"Landscaping",status:"Activo"},
+ {id:5,number:"SUP-002",name:"Ana López",role:"Supervisor",dept:"Cleaning",status:"Activo"},
+ {id:6,number:"EMP-001",name:"Luis Pérez",role:"Empleado",dept:"Landscaping",status:"Activo"},
+ {id:7,number:"EMP-002",name:"Sofía Torres",role:"Empleado",dept:"Cleaning",status:"Activo"},
+ {id:8,number:"EMP-003",name:"Miguel Díaz",role:"Empleado autorizado",dept:"Ambos",status:"Activo"}]
+};
+let db;try{db=JSON.parse(localStorage.getItem("prestige-demo-db"))||structuredClone(seed)}catch{db=structuredClone(seed)}
+let active="inicio",pendingType=null;
+const p=()=>profiles[$("profile").value];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const visible=(item)=>item.dept==="Todos"||p().depts.includes(item.dept);
+function save(){localStorage.setItem("prestige-demo-db",JSON.stringify(db))}
+function allowed(){return p().views}
+function renderNav(){$("nav").innerHTML=modules.filter(m=>allowed().includes(m[0])).map(m=>'<button class="'+(active===m[0]?"active":"")+'" data-page="'+m[0]+'">'+m[1]+' &nbsp;'+m[2]+'</button>').join("");}
+function header(title,desc,action=""){return '<div class="head"><div><h2>'+title+'</h2><p>'+desc+'</p></div>'+action+'</div>'}
+function rows(items,kind){if(!items.length)return '<div class="empty">Todavía no hay registros para mostrar.</div>';return items.map(x=>'<div class="row"><span><b>'+esc(x.title||x.name)+'</b><small>'+esc(x.body||x.number||"")+(x.date?" · "+esc(x.date):"")+'</small></span><span class="tag '+(x.status==="Cerrada"?"":"gold")+'">'+esc(x.status||x.dept||"")+'</span></div>').join("")}
+function table(items,cols){if(!items.length)return '<div class="empty">No hay registros disponibles.</div>';return '<div class="tablebox"><table class="table"><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join("")+'</tr></thead><tbody>'+items.map(x=>'<tr>'+cols.map(c=>'<td>'+esc(x[c[0]])+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>'}
+function render(){
+ const u=p(),dept=u.dept; $("greeting").textContent="Bienvenido, "+u.name;$("subtitle").textContent=u.role+" · "+u.number;$("person-name").textContent=u.name;$("person-role").textContent=u.role+" · "+u.number;$("dept-label").textContent=dept;renderNav();
+ const count=k=>db[k].filter(visible).length;
+ let html="";
+ if(active==="inicio"){
+ html=header("Resumen de actividad","Información correspondiente a "+dept+".")+
+ '<div class="stats"><div class="card stat"><small>Turnos programados</small><strong>'+count("turnos")+'</strong><span>En los departamentos asignados</span></div><div class="card stat"><small>Incidencias registradas</small><strong>'+count("incidencias")+'</strong><span>Con historial conservado</span></div><div class="card stat"><small>Conversaciones</small><strong>'+count("conversaciones")+'</strong><span>Participación del personal</span></div></div>'+
+ '<div class="grid"><section class="card"><h3>Actividad reciente</h3>'+rows([...db.incidencias.filter(visible).slice(0,2),...db.comunicados.filter(visible).slice(0,1)],"")+'</section><section class="card"><h3>Accesos rápidos</h3>'+modules.filter(m=>allowed().includes(m[0])&&m[0]!=="inicio").map(m=>'<div class="row"><b>'+m[2]+'</b><button class="btn alt" data-page="'+m[0]+'">Abrir</button></div>').join("")+'</section></div>';
+ }else if(active==="comunicados"){
+ html=header("Comunicados oficiales","Avisos formales publicados exclusivamente por Administración.",u.role==="Administración"?'<button class="btn" data-new="comunicados">+ Publicar comunicado</button>':"")+'<section class="card"><h3>Tablón oficial</h3>'+rows(db.comunicados.filter(visible))+'</section><div class="notice">Este módulo es independiente de Conversaciones. Solo Administración publica comunicados oficiales.</div>';
+ }else if(active==="conversaciones"){
+ html=header("Conversaciones del personal","Participación abierta a los miembros de "+dept+'.','<button class="btn" data-new="conversaciones">+ Nueva conversación</button>')+'<section class="card"><h3>Debates y colaboración</h3>'+rows(db.conversaciones.filter(visible))+'</section>';
+ }else if(active==="turnos"){
+ html=header("Turnos y horarios","Programación con identificador único para "+dept+'.',allowed().includes("personal")?'<button class="btn" data-new="turnos">+ Crear turno</button>':"")+'<section class="card"><h3>Programación</h3>'+table(db.turnos.filter(visible),[["code","Identificador"],["title","Servicio"],["dept","Departamento"],["date","Fecha"],["time","Hora"],["team","Equipo"],["status","Estado"]])+'</section>';
+ }else if(active==="equipos"){
+ html=header("Equipos de trabajo","Organización de los equipos por departamento.",allowed().includes("personal")?'<button class="btn" data-new="equipos">+ Crear equipo</button>':"")+'<section class="card"><h3>Equipos asignados</h3>'+rows(db.equipos.filter(visible))+'</section>';
+ }else if(active==="incidencias"){
+ html=header("Incidencias","Registro, seguimiento e historial de situaciones del servicio.",p().role!=="Empleado"?'<button class="btn" data-new="incidencias">+ Registrar incidencia</button>':"")+'<section class="card"><h3>Historial de incidencias</h3>'+rows(db.incidencias.filter(visible))+'</section><div class="notice">Los reportes quedan asociados al departamento y se notifican a Gerencia y Administración en la versión conectada.</div>';
+ }else if(active==="personal"){
+ html=header("Administración de personal","Vista general de roles y departamentos.")+'<section class="card"><h3>Directorio de demostración</h3>'+table(db.personal,[["number","Número"],["name","Nombre"],["role","Rol"],["dept","Departamento"],["status","Estado"]])+'</section><div class="notice">En el portal real, Administración gestionará invitaciones y permisos. Aquí no se envían invitaciones.</div>';
+ }
+ $("view").innerHTML=html;
+}
+function openForm(type){
+ pendingType=type;const fields={
+ comunicados:[["title","Título","text"],["body","Contenido","textarea"],["dept","Departamento","select"]],
+ conversaciones:[["title","Tema","text"],["body","Mensaje inicial","textarea"]],
+ turnos:[["title","Servicio o cliente","text"],["date","Fecha","date"],["time","Hora","time"],["team","Equipo asignado","text"],["dept","Departamento","select"]],
+ equipos:[["title","Nombre del equipo","text"],["body","Supervisor e integrantes","text"],["dept","Departamento","select"]],
+ incidencias:[["title","Tipo o título de incidencia","text"],["body","Descripción detallada","textarea"],["dept","Departamento","select"]]
+ }[type];
+ $("modal-title").textContent=({comunicados:"Publicar comunicado oficial",conversaciones:"Iniciar conversación",turnos:"Crear turno",equipos:"Crear equipo",incidencias:"Registrar incidencia"})[type];
+ $("fields").innerHTML=fields.map(([id,label,kind])=>'<div class="field"><label for="f-'+id+'">'+label+'</label>'+(kind==="textarea"?'<textarea id="f-'+id+'" required></textarea>':kind==="select"?'<select id="f-'+id+'">'+(type==="comunicados"?["Todos","Landscaping","Cleaning"]:p().depts).map(v=>'<option>'+v+'</option>').join("")+'</select>':'<input id="f-'+id+'" type="'+kind+'" required '+(id==="date"?'value="2026-11-25"':"")+'></div>').join("")+
+ '<p class="hint">Los datos se guardan solo en este navegador.</p>';
+ $("modal").classList.add("show");
+}
+$("record-form").addEventListener("submit",e=>{
+ e.preventDefault();const type=pendingType;const get=id=>$("f-"+id)?.value||"";const dept=get("dept")||p().depts[0];const record={id:Date.now(),dept,title:get("title"),body:get("body"),date:new Date().toLocaleDateString("es-US"),by:p().name};
+ if(type==="turnos"){record.code="TUR-DEMO-"+String(Date.now()).slice(-5);record.date=get("date");record.time=get("time");record.team=get("team");record.status="Programado"}
+ if(type==="incidencias"){record.status="Abierta"}
+ if(type==="equipos")record.status="Activo";
+ db[type].unshift(record);save();$("modal").classList.remove("show");render();
+});
+$("cancel").onclick=()=>$("modal").classList.remove("show");
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("show")});
+document.addEventListener("click",e=>{const page=e.target.closest("[data-page]");if(page){active=page.dataset.page;render();return}const add=e.target.closest("[data-new]");if(add)openForm(add.dataset.new)});
+$("profile").addEventListener("change",()=>{active="inicio";render()});
+render();
+</script></body></html>
