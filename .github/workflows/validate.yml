@@ -25,6 +25,10 @@ jobs:
           for version in $(seq -w 1 18); do
             test -f "supabase/migrations/2026112400${version}_"*.sql
           done
+          grep -q 'revoke update on public.profiles from authenticated' supabase/migrations/202611240008_admin_account_controls.sql
+          grep -q 'grant update (display_name) on public.profiles to authenticated' supabase/migrations/202611240008_admin_account_controls.sql
+          grep -q 'create or replace function public.current_user_can_manage_admins()' supabase/migrations/202611240009_current_admin_capability.sql
+          grep -q 'create or replace function public.set_admin_delegation_permission' supabase/migrations/202611240010_atomic_admin_delegation.sql
           grep -q 'revoke select on public.profiles from authenticated' supabase/migrations/202611240011_profile_directory_privacy.sql
           grep -q 'create or replace function public.get_my_profile()' supabase/migrations/202611240011_profile_directory_privacy.sql
           grep -q 'alter function public.is_active_user() set schema private' supabase/migrations/202611240012_private_rls_helpers.sql
