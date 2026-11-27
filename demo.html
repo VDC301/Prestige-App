@@ -130,4 +130,5 @@ $("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").clas
 document.addEventListener("click",e=>{const page=e.target.closest("[data-page]");if(page){active=page.dataset.page;render();return}const add=e.target.closest("[data-new]");if(add)openForm(add.dataset.new)});
 $("profile").addEventListener("change",()=>{active="inicio";render()});
 render();
-</script></body></html>
+</script><!-- Publicación de la corrección de renderizado -->
+</body></html>
