@@ -60,12 +60,18 @@ const seed={
  {id:7,number:"EMP-002",name:"Sofía Torres",role:"Empleado",dept:"Cleaning",status:"Activo"},
  {id:8,number:"EMP-003",name:"Miguel Díaz",role:"Empleado autorizado",dept:"Ambos",status:"Activo"}]
 };
-let db;try{db=JSON.parse(localStorage.getItem("prestige-demo-db"))||structuredClone(seed)}catch{db=structuredClone(seed)}
+const cloneSeed=()=>JSON.parse(JSON.stringify(seed));
+let db;
+try{
+ const stored=JSON.parse(localStorage.getItem("prestige-demo-db")||"null");
+ db=stored&&typeof stored==="object"?{...cloneSeed(),...stored}:cloneSeed();
+ for(const key of Object.keys(seed))if(!Array.isArray(db[key]))db[key]=cloneSeed()[key];
+}catch{db=cloneSeed()}
 let active="inicio",pendingType=null;
 const p=()=>profiles[$("profile").value];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const visible=(item)=>item.dept==="Todos"||p().depts.includes(item.dept);
-function save(){localStorage.setItem("prestige-demo-db",JSON.stringify(db))}
+function save(){try{localStorage.setItem("prestige-demo-db",JSON.stringify(db))}catch{alert("El navegador no permitió guardar los cambios. Puedes continuar viendo la demostración, pero los datos no se conservarán.")}}
 function allowed(){return p().views}
 function renderNav(){$("nav").innerHTML=modules.filter(m=>allowed().includes(m[0])).map(m=>'<button class="'+(active===m[0]?"active":"")+'" data-page="'+m[0]+'">'+m[1]+' &nbsp;'+m[2]+'</button>').join("");}
 function header(title,desc,action=""){return '<div class="head"><div><h2>'+title+'</h2><p>'+desc+'</p></div>'+action+'</div>'}
@@ -103,8 +109,13 @@ function openForm(type){
  incidencias:[["title","Tipo o título de incidencia","text"],["body","Descripción detallada","textarea"],["dept","Departamento","select"]]
  }[type];
  $("modal-title").textContent=({comunicados:"Publicar comunicado oficial",conversaciones:"Iniciar conversación",turnos:"Crear turno",equipos:"Crear equipo",incidencias:"Registrar incidencia"})[type];
- $("fields").innerHTML=fields.map(([id,label,kind])=>'<div class="field"><label for="f-'+id+'">'+label+'</label>'+(kind==="textarea"?'<textarea id="f-'+id+'" required></textarea>':kind==="select"?'<select id="f-'+id+'">'+(type==="comunicados"?["Todos","Landscaping","Cleaning"]:p().depts).map(v=>'<option>'+v+'</option>').join("")+'</select>':'<input id="f-'+id+'" type="'+kind+'" required '+(id==="date"?'value="2026-11-25"':"")+'></div>').join("")+
- '<p class="hint">Los datos se guardan solo en este navegador.</p>';
+ $("fields").innerHTML=fields.map(([id,label,kind])=>{
+  let control="";
+  if(kind==="textarea")control='<textarea id="f-'+id+'" required></textarea>';
+  else if(kind==="select")control='<select id="f-'+id+'">'+(type==="comunicados"?["Todos","Landscaping","Cleaning"]:p().depts).map(v=>'<option>'+esc(v)+'</option>').join("")+'</select>';
+  else control='<input id="f-'+id+'" type="'+kind+'" required '+(id==="date"?'value="2026-11-28"':"")+'>';
+  return '<div class="field"><label for="f-'+id+'">'+label+'</label>'+control+'</div>';
+ }).join("")+'<p class="hint">Los datos se guardan solo en este navegador.</p>';
  $("modal").classList.add("show");
 }
 $("record-form").addEventListener("submit",e=>{
