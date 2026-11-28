@@ -7,7 +7,7 @@ const supabase = window.supabase?.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY
 const $ = (id) => document.getElementById(id);
 const labels = {
   inicio:"Resumen de actividad", comunicados:"Comunicados oficiales",
-  conversaciones:"Conversaciones del personal", turnos:"Turnos y horarios",
+  conversaciones:"Conversaciones del personal", turnos:"Horario semanal",
   equipos:"Equipos de trabajo", incidencias:"Incidencias",
   personal:"Administración de personal", ajustes:"Configuración del portal"
 };
@@ -26,7 +26,8 @@ function initials(name) {
   return String(name || "P").trim().split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase();
 }
 function departmentsLabel(departments) {
-  return departments?.length ? departments.map(d=>d.name).join(" + ") : "Administración";
+  const names = {landscaping:"Jardinería", cleaning:"Limpieza", jardinería:"Jardinería", limpieza:"Limpieza"};
+  return departments?.length ? departments.map(d=>names[String(d.name||"").toLowerCase()] || d.name).join(" + ") : "Administración";
 }
 function allowedViews(profile) {
   if(profile.role==="admin") return ["inicio","comunicados","conversaciones","turnos","equipos","incidencias","personal","ajustes"];
@@ -88,7 +89,7 @@ function render() {
   let html="";
   if(currentView==="inicio") {
     html=header("Resumen de actividad","Información correspondiente a "+d+".")+
-    `<div class="stats"><div class="stat-card"><small>Personal asignado</small><strong>—</strong><span>Conexión de datos en preparación</span></div><div class="stat-card"><small>Turnos de hoy</small><strong>—</strong><span>Conexión de datos en preparación</span></div><div class="stat-card"><small>Incidencias abiertas</small><strong>—</strong><span>Conexión de datos en preparación</span></div></div>
+    `<div class="stats"><div class="stat-card"><small>Personal asignado</small><strong>—</strong><span>Conexión de datos en preparación</span></div><div class="stat-card"><small>Jornadas de hoy</small><strong>—</strong><span>Conexión de datos en preparación</span></div><div class="stat-card"><small>Incidencias abiertas</small><strong>—</strong><span>Conexión de datos en preparación</span></div></div>
     <div class="dashboard-grid">${panel("Actividad reciente",'<div class="empty-state">Aquí aparecerán las actualizaciones de tu departamento.</div>')}${panel("Accesos rápidos",'<div class="list-row">Comunicados oficiales</div><div class="list-row">Turnos y horarios</div><div class="list-row">Incidencias</div>')}</div>
     <div class="notice"><strong>Separación de departamentos:</strong> tu panel muestra únicamente la información de ${d}. El acceso a ambos departamentos requiere autorización de Administración.</div>`;
   } else if(currentView==="comunicados") {
@@ -105,7 +106,7 @@ function render() {
       panel("Equipos activos",'<div class="empty-state">Los equipos registrados aparecerán aquí.</div>');
   } else if(currentView==="incidencias") {
     html=header("Incidencias","Registro e historial de situaciones durante los servicios.",'<button class="primary-button" data-action="new-incident">+ Registrar incidencia</button>')+
-      panel("Historial de incidencias · "+d,'<div class="empty-state">Los reportes de trabajo aparecerán aquí.</div>');
+      panel("Historial de incidencias · "+d,'<div class="empty-state">Los informes de trabajo aparecerán aquí.</div>');
   } else if(currentView==="personal" && activeProfile.admin) {
     html=renderPersonal();
   } else if(currentView==="ajustes" && activeProfile.admin) {
@@ -134,8 +135,8 @@ function renderPersonal() {
       <div id="department-fields">
         <label>Departamento principal</label>
         <div class="department-options">
-          <label><input type="checkbox" name="department" value="landscaping"> Landscaping</label>
-          <label><input type="checkbox" name="department" value="cleaning"> Cleaning</label>
+          <label><input type="checkbox" name="department" value="landscaping"> Jardinería</label>
+          <label><input type="checkbox" name="department" value="cleaning"> Limpieza</label>
         </div>
         <p class="field-help">Selecciona uno. El segundo departamento solo puede asignarse con autorización y justificación.</p>
         <div id="second-department-reason" hidden>
@@ -344,7 +345,8 @@ function updateConnection() {
 window.addEventListener("online",updateConnection);
 window.addEventListener("offline",updateConnection);
 updateConnection();
-$("today-label").textContent=new Intl.DateTimeFormat("es-US",{weekday:"long",month:"long",day:"numeric"}).format(new Date()).toLocaleUpperCase("es-US");
+const todayText=new Intl.DateTimeFormat("es-US",{weekday:"long",month:"long",day:"numeric"}).format(new Date());
+$("today-label").textContent=todayText.charAt(0).toLocaleUpperCase("es-US")+todayText.slice(1);
 
 (async()=>{
   if(!window.supabase) {
