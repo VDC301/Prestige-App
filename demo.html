@@ -82,6 +82,81 @@ button,.btn,.nav button,select{min-height:42px}
  .stat{padding:11px}
  .nav button{padding:8px 10px}
 }
+
+/* Tipografía fluida y distribución adaptable en todos los dispositivos */
+:root{font-size:clamp(16px,calc(15px + .22vw),19px)}
+body{font-size:1rem;line-height:1.5}
+.top{padding:clamp(14px,1.5vw,22px) clamp(18px,4vw,64px)}
+.brand{font-size:clamp(21px,1.8vw,27px);letter-spacing:clamp(2px,.25vw,3px)}
+.brand small{font-size:clamp(9px,.75vw,11px);letter-spacing:clamp(1.2px,.15vw,2px)}
+.demo{font-size:clamp(11px,.9vw,13px);padding:9px 13px}
+.wrap{width:min(100%,1680px);padding:clamp(22px,3vw,48px) clamp(16px,3.5vw,56px);margin-inline:auto}
+.eyebrow{font-size:clamp(11px,.85vw,13px);letter-spacing:1.5px}
+.hero{gap:clamp(16px,2vw,28px);margin-bottom:clamp(20px,2vw,30px)}
+.hero h1{font-size:clamp(28px,2.6vw,42px);line-height:1.15}
+.sub{font-size:clamp(15px,1.05vw,17px);line-height:1.5}
+.profile{gap:10px}
+.profile label{font-size:clamp(14px,.95vw,16px)}
+.profile select{font-size:clamp(14px,.95vw,16px);padding:11px 13px;min-height:46px}
+.layout{grid-template-columns:minmax(220px,clamp(230px,19vw,290px)) minmax(0,1fr);gap:clamp(14px,1.5vw,24px)}
+.side{padding:clamp(14px,1.3vw,20px);top:90px}
+.person b{font-size:clamp(15px,1vw,17px)}
+.person small,.sidefoot{font-size:clamp(12px,.85vw,14px)}
+.nav button{font-size:clamp(14px,.95vw,16px);padding:12px;min-height:46px}
+.main{padding:clamp(20px,2vw,32px);min-height:620px}
+.head{margin-bottom:clamp(18px,1.8vw,26px)}
+.head h2{font-size:clamp(23px,1.8vw,30px);line-height:1.25}
+.head p{font-size:clamp(14px,1vw,16px);line-height:1.5}
+.btn{font-size:clamp(14px,.95vw,16px);padding:11px 16px;min-height:46px}
+.stats{gap:clamp(10px,1.1vw,16px);margin-bottom:clamp(14px,1.2vw,20px)}
+.stat,.card{padding:clamp(15px,1.5vw,23px)}
+.stat small{font-size:clamp(13px,.9vw,15px)}
+.stat strong{font-size:clamp(27px,2vw,36px)}
+.stat span{font-size:clamp(12px,.82vw,14px);line-height:1.4}
+.card h3{font-size:clamp(16px,1.1vw,19px);margin-bottom:14px}
+.row{font-size:clamp(14px,.98vw,16px);padding:14px 0;line-height:1.45}
+.row small{font-size:clamp(12px,.85vw,14px);line-height:1.45}
+.tag{font-size:clamp(12px,.82vw,14px);padding:6px 10px}
+.notice{font-size:clamp(13px,.9vw,15px);line-height:1.6;padding:15px}
+.empty{font-size:clamp(14px,.95vw,16px);line-height:1.55}
+.table{font-size:clamp(14px,.95vw,16px)}
+.table th{font-size:clamp(12px,.82vw,14px)}
+.table th,.table td{padding:13px 10px}
+.field label{font-size:clamp(13px,.9vw,15px)}
+.field input,.field select,.field textarea{font-size:16px;min-height:46px;padding:12px}
+.hint{font-size:12px}
+.dialog{padding:clamp(20px,2vw,30px)}
+.dialog h3{font-size:clamp(20px,1.5vw,25px)}
+footer{font-size:12px;line-height:1.5}
+@media(min-width:1400px){.layout{grid-template-columns:280px minmax(0,1fr)}.main{padding:32px}.grid{gap:18px}}
+@media(max-width:800px){
+ .wrap{padding:22px 18px}.layout{display:flex;flex-direction:column;gap:13px}
+ .side{top:61px;padding:9px}.nav button{font-size:14px;min-height:44px;padding:10px 13px}
+ .main{padding:clamp(17px,3vw,24px)}.hero h1{font-size:clamp(27px,5vw,34px)}
+ .sub{font-size:15px}.head h2{font-size:clamp(22px,4vw,27px)}.head p{font-size:14px}
+ .stats{gap:10px}.stat{padding:15px}.stat small{font-size:13px}
+ .stat strong{font-size:clamp(25px,4vw,31px)}.stat span{font-size:12px}
+ .grid{grid-template-columns:minmax(0,1fr);gap:12px}.card h3{font-size:16px}
+ .row{font-size:14px}.row small{font-size:13px}.notice{font-size:14px}
+}
+@media(max-width:480px){
+ .top{padding:11px 13px;min-height:60px}.brand{font-size:18px}.brand small{font-size:8px}
+ .demo{font-size:10px;max-width:155px;padding:7px 9px}.wrap{padding:18px 12px}
+ .hero h1{font-size:27px}.eyebrow{font-size:10px}.sub{font-size:15px}
+ .profile label{font-size:14px}.profile select{font-size:16px;min-height:46px}
+ .side{top:59px}.nav button{font-size:13px;min-height:44px;padding:9px 12px}
+ .main{padding:16px}.head h2{font-size:23px}.head p{font-size:14px}
+ .btn{font-size:14px;min-height:46px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stats .stat:last-child{grid-column:1/-1}.stat{padding:14px}
+ .stat small{font-size:13px}.stat strong{font-size:26px}.stat span{font-size:12px}
+ .card{padding:15px}.card h3{font-size:16px}.row{font-size:14px;gap:9px}
+ .row small{font-size:13px}.tag{font-size:12px}.notice{font-size:13px}
+ .table{font-size:13px;min-width:600px}.table th{font-size:12px}
+ .field label{font-size:14px}.field input,.field select,.field textarea{font-size:16px}
+ .dialog h3{font-size:21px}footer{font-size:11px}
+}
+@media(max-width:360px){.wrap{padding-inline:9px}.brand{font-size:16px}.demo{font-size:9px;max-width:130px}.main{padding:13px}.hero h1{font-size:25px}.stat{padding:12px}}
+
 </style>
 </head>
 <body>
