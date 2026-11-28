@@ -256,7 +256,7 @@ function render(){
  '<div class="stats"><div class="card stat"><small>Turnos programados</small><strong>'+count("turnos")+'</strong><span>En los departamentos asignados</span></div><div class="card stat"><small>Incidencias registradas</small><strong>'+count("incidencias")+'</strong><span>Con historial conservado</span></div><div class="card stat"><small>Conversaciones</small><strong>'+count("conversaciones")+'</strong><span>Participación del personal</span></div></div>'+
  '<div class="grid"><section class="card"><h3>Actividad reciente</h3>'+rows([...db.incidencias.filter(visible).slice(0,2),...db.comunicados.filter(visible).slice(0,1)],"")+'</section><section class="card"><h3>Accesos rápidos</h3>'+modules.filter(m=>allowed().includes(m[0])&&m[0]!=="inicio").map(m=>'<div class="row"><b>'+m[2]+'</b><button class="btn alt" data-page="'+m[0]+'">Abrir</button></div>').join("")+'</section></div>';
  }else if(active==="comunicados"){
- html=header("Comunicados oficiales","Avisos formales publicados exclusivamente por Administración.",u.role==="Administración"?'<button class="btn" data-new="comunicados">+ Publicar comunicado</button>':"")+'<section class="card"><h3>Tablón oficial</h3>'+rows(db.comunicados.filter(visible))+'</section><div class="notice">Este módulo es independiente de Conversaciones. Solo Administración publica comunicados oficiales.</div>';
+ html=header("Comunicados oficiales","Avisos formales publicados por Administración y Gerencia.",["Administración","Gerencia"].includes(u.role)?'<button class="btn" data-new="comunicados">+ Publicar comunicado</button>':"")+'<section class="card"><h3>Tablón oficial</h3>'+rows(db.comunicados.filter(visible))+'</section><div class="notice">Este módulo es independiente de Conversaciones. Solo Administración publica comunicados oficiales.</div>';
  }else if(active==="conversaciones"){
  html=header("Conversaciones del personal","Haz preguntas, comenta y apoya las ideas de tu departamento.",'<button class="btn" data-new="conversaciones">+ Nueva conversación</button>')+'<section class="card"><h3>Debates y colaboración · '+esc(dept)+'</h3>'+conversationRows(db.conversaciones.filter(visible))+'</section><div class="notice">Las conversaciones y sus comentarios son independientes de los comunicados oficiales.</div>';
  }else if(active==="turnos"){
@@ -283,7 +283,7 @@ function openForm(type){
   let control="";
   if(kind==="textarea")control='<textarea id="f-'+id+'" required></textarea>';
   else if(kind==="file")control='<input id="f-'+id+'" type="file" accept="image/*" '+(type==="incidencias"?"required":"")+'><small class="hint">'+(type==="incidencias"?"Obligatoria. Adjunta una fotografía clara como evidencia (máximo 8 MB).":"Opcional. Se optimizará para que el comunicado cargue más rápido.")+'</small>';
-  else if(kind==="select")control='<select id="f-'+id+'">'+(type==="comunicados"?["Todos","Landscaping","Cleaning"]:p().depts).map(v=>'<option>'+esc(v)+'</option>').join("")+'</select>';
+  else if(kind==="select")control='<select id="f-'+id+'">'+(type==="comunicados"?(p().role==="Administración"?["Todos","Landscaping","Cleaning"]:p().depts):p().depts).map(v=>'<option>'+esc(v)+'</option>').join("")+'</select>';
   else control='<input id="f-'+id+'" type="'+kind+'" required '+(id==="date"?'value="2026-11-28"':"")+'>';
   return '<div class="field"><label for="f-'+id+'">'+label+'</label>'+control+'</div>';
  }).join("")+'<p class="hint">Los datos se guardan solo en este navegador.</p>';
