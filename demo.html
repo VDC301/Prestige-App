@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173d32">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
+<link rel="shortcut icon" type="image/svg+xml" href="./assets/icon.svg">
+<link rel="apple-touch-icon" href="./assets/icon.svg"><title>Prestige | Demostración interactiva</title>
+<style>
+.brand-lockup{display:flex;align-items:center;gap:13px;min-width:0}.brand-logo{display:block;width:clamp(110px,8vw,125px);height:clamp(98px,7.2vw,112px);object-fit:contain;flex:0 0 auto}.brand-copy{min-width:0}.brand-copy .brand-name{display:block;font-weight:850;letter-spacing:3px;color:var(--g);font-size:23px;line-height:1.1}.brand-copy small{display:block;font-size:9px;letter-spacing:2px;color:#758278;margin-top:4px}@media(max-width:480px){.brand-lockup{gap:9px}.brand-logo{width:80px;height:74px}.brand-copy .brand-name{font-size:18px;letter-spacing:2px}.brand-copy small{font-size:8px;letter-spacing:1.3px}}
+:root{font-family:Inter,system-ui,-apple-system,sans-serif;color:#203129;background:#f3f6f2;--g:#173d32;--g2:#2c604d;--line:#e2e9e2;--muted:#738078}*{box-sizing:border-box}body{margin:0}.top{background:white;border-bottom:1px solid var(--line);padding:15px 4vw;display:flex;align-items:center;justify-content:space-between;gap:15px;position:sticky;top:0;z-index:3}.brand{font-weight:850;letter-spacing:3px;color:var(--g);font-size:21px}.brand small{display:block;font-size:8px;letter-spacing:2px;color:#758278;margin-top:3px}.demo{font-size:11px;color:#80683e;background:#f6efdf;border-radius:20px;padding:8px 12px}.wrap{max-width:1400px;margin:auto;padding:28px 4vw}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.eyebrow{font-size:10px;letter-spacing:1.8px;color:#8b988f;font-weight:750}.hero h1{font-size:clamp(24px,4vw,34px);margin:7px 0}.sub{color:var(--muted);font-size:13px}.profile{display:flex;gap:8px;align-items:center}.profile select,button,input,textarea{font:inherit}.profile select{padding:10px;border:1px solid var(--line);border-radius:8px;background:white}.layout{display:grid;grid-template-columns:230px 1fr;gap:18px}.side,.main,.card{background:white;border:1px solid var(--line);border-radius:12px}.side{padding:15px;height:max-content;position:sticky;top:85px}.person{padding:8px 5px 18px;border-bottom:1px solid var(--line);margin-bottom:12px}.person b,.person small{display:block}.person small{color:var(--muted);font-size:11px;margin-top:4px}.nav{display:grid;gap:4px}.nav button{border:0;background:white;text-align:left;padding:11px;border-radius:8px;color:#56645a;cursor:pointer;font-size:12px}.nav button.active,.nav button:hover{background:#edf3ee;color:var(--g);font-weight:700}.sidefoot{border-top:1px solid var(--line);padding:15px 5px 0;margin-top:15px;font-size:11px}.main{padding:24px;min-height:620px}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:20px}.head h2{font-size:21px;margin:0 0 5px}.head p{font-size:12px;color:var(--muted);margin:0}.btn{border:0;border-radius:8px;padding:10px 14px;background:var(--g);color:white;cursor:pointer;font-size:12px;font-weight:650}.btn.alt{background:#edf3ee;color:var(--g)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:15px}.stat,.card{padding:17px}.stat small{font-size:11px;color:var(--muted)}.stat strong{display:block;font-size:27px;margin:8px 0 3px;color:var(--g)}.stat span{font-size:10px;color:var(--muted)}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:13px}.card h3{font-size:13px;margin:0 0 13px}.row{padding:12px 0;border-top:1px solid #edf1ed;font-size:12px;display:flex;justify-content:space-between;gap:12px;align-items:center}.row:first-of-type{border-top:0}.row small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.tag{font-size:10px;background:#edf3ee;color:#3e7056;border-radius:20px;padding:5px 8px;white-space:nowrap}.tag.gold{background:#f7f0e4;color:#94713d}.notice{padding:13px;background:#faf7ef;border:1px solid #eee6d7;border-radius:8px;color:#78694f;font-size:11px;line-height:1.5;margin-top:14px}.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:9px;font-size:12px}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{text-align:left;padding:12px 8px;border-bottom:1px solid var(--line)}.table th{font-size:10px;color:var(--muted)}.modal{position:fixed;inset:0;background:#14271e77;display:none;place-items:center;padding:18px;z-index:5}.modal.show{display:grid}.dialog{width:min(520px,100%);background:white;border-radius:14px;padding:22px;max-height:90vh;overflow:auto}.dialog h3{margin:0 0 15px}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;font-weight:700}.field input,.field select,.field textarea{padding:11px;border:1px solid var(--line);border-radius:8px;width:100%;background:white}.field textarea{min-height:90px}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.hint{font-size:10px;color:var(--muted)}.announcement-image{display:block;width:min(100%,520px);max-height:320px;object-fit:contain;object-position:left center;border-radius:9px;margin-top:10px;border:1px solid var(--line)}.mobilebar{display:none}footer{text-align:center;color:#89958d;font-size:10px;padding:24px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.side{position:static;padding:10px}.person,.sidefoot{display:none}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.main{padding:17px}.grid{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.profile{width:100%;flex-wrap:wrap}.profile select{flex:1}.stats{gap:7px}.stat{padding:12px}.stat strong{font-size:22px}}
+@media(max-width:480px){.top{padding:13px 17px}.brand{font-size:18px}.wrap{padding:20px 12px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.head{flex-direction:column}.head .btn{width:100%}.table{min-width:560px}.tablebox{overflow:auto}}
+
+/* Ajustes de experiencia móvil */
+html{width:100%;overflow-x:hidden;scroll-behavior:smooth}
+body{width:100%;min-width:320px;overflow-x:hidden;-webkit-text-size-adjust:100%}
+button,select,input,textarea{touch-action:manipulation}
+button,.btn,.nav button,select{min-height:42px}
+.wrap,.layout,.main,.side,.card,.grid,.stats{min-width:0}
+.main{overflow:hidden}
+.tablebox{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table{white-space:nowrap}
+@media(max-width:800px){
+ .top{padding:12px 18px;min-height:62px}
+ .demo{font-size:9px;padding:7px 9px;text-align:center;line-height:1.25}
+ .wrap{padding:20px 16px}
+ .hero{gap:14px;margin-bottom:16px}
+ .hero>div:first-child{min-width:0}
+ .hero h1{font-size:clamp(23px,6vw,30px);line-height:1.15}
+ .sub{font-size:12px;line-height:1.45}
+ .profile{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px;width:100%}
+ .profile label{font-size:12px;font-weight:650}
+ .profile select{width:100%;min-width:0;min-height:44px}
+ .layout{display:flex;flex-direction:column;gap:12px}
+ .side{position:sticky;top:61px;z-index:2;padding:8px;border-radius:10px;box-shadow:0 3px 12px #173d3210}
+ .nav{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:1px 1px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+ .nav::-webkit-scrollbar{display:none}
+ .nav button{flex:0 0 auto;white-space:nowrap;padding:10px 12px;min-height:42px;font-size:12px;scroll-snap-align:start}
+ .main{padding:17px;border-radius:10px;min-height:0}
+ .head{gap:10px;margin-bottom:16px}
+ .head h2{font-size:19px;line-height:1.25}
+ .head p{line-height:1.45}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .stat{padding:13px;min-width:0}
+ .stat strong{font-size:23px}
+ .grid{grid-template-columns:minmax(0,1fr);gap:10px}
+ .card{padding:14px}
+ .row{align-items:flex-start;flex-wrap:wrap}
+ .notice{line-height:1.55}
+}
+@media(max-width:480px){
+ .top{gap:8px;padding:10px 13px;min-height:58px}
+ .brand{font-size:17px;letter-spacing:2px;white-space:nowrap}
+ .brand small{font-size:7px;letter-spacing:1.4px}
+ .demo{max-width:148px;font-size:8px;letter-spacing:.1px}
+ .wrap{padding:16px 11px}
+ .eyebrow{font-size:9px;letter-spacing:1.3px}
+ .hero h1{font-size:24px}
+ .profile{grid-template-columns:1fr;gap:5px}
+ .profile select{font-size:13px}
+ .side{top:57px;padding:7px}
+ .nav button{font-size:11px;padding:9px 11px;min-height:40px}
+ .main{padding:14px}
+ .head{flex-direction:column;align-items:stretch}
+ .head .btn{width:100%;min-height:44px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stats .stat:last-child{grid-column:1/-1}
+ .stat strong{font-size:21px}
+ .stat small,.stat span{font-size:10px}
+ .card h3{font-size:13px}
+ .row{font-size:12px;gap:8px}
+ .tag{white-space:normal;text-align:center}
+ .empty{padding:22px 13px;line-height:1.5}
+ .dialog{padding:17px;max-height:88dvh}
+ .field input,.field select,.field textarea{font-size:16px;min-height:44px}
+ .actions{position:sticky;bottom:-17px;background:white;padding:10px 0 2px;flex-wrap:wrap}
+ .actions button{flex:1;min-height:44px}
+ footer{padding:18px 12px;line-height:1.5}
+}
+@media(max-width:360px){
+ .brand-logo{width:70px;height:66px}
+ .demo{max-width:122px}
+ .brand{font-size:15px}
+ .wrap{padding-left:9px;padding-right:9px}
+ .main{padding:12px}
+ .stat{padding:11px}
+ .nav button{padding:8px 10px}
+}
+
+/* Tipografía fluida y distribución adaptable en todos los dispositivos */
+:root{font-size:clamp(16px,calc(15px + .22vw),19px)}
+body{font-size:1rem;line-height:1.5}
+.top{padding:clamp(14px,1.5vw,22px) clamp(18px,4vw,64px)}
+.brand{font-size:clamp(21px,1.8vw,27px);letter-spacing:clamp(2px,.25vw,3px)}
+.brand small{font-size:clamp(9px,.75vw,11px);letter-spacing:clamp(1.2px,.15vw,2px)}
+.demo{font-size:clamp(11px,.9vw,13px);padding:9px 13px}
+.wrap{width:min(100%,1680px);padding:clamp(22px,3vw,48px) clamp(16px,3.5vw,56px);margin-inline:auto}
+.eyebrow{font-size:clamp(11px,.85vw,13px);letter-spacing:1.5px}
+.hero{gap:clamp(16px,2vw,28px);margin-bottom:clamp(20px,2vw,30px)}
+.hero h1{font-size:clamp(28px,2.6vw,42px);line-height:1.15}
+.sub{font-size:clamp(15px,1.05vw,17px);line-height:1.5}
+.profile{gap:10px}
+.profile label{font-size:clamp(14px,.95vw,16px)}
+.profile select{font-size:clamp(14px,.95vw,16px);padding:11px 13px;min-height:46px}
+.layout{grid-template-columns:minmax(220px,clamp(230px,19vw,290px)) minmax(0,1fr);gap:clamp(14px,1.5vw,24px)}
+.side{padding:clamp(14px,1.3vw,20px);top:90px}
+.person b{font-size:clamp(15px,1vw,17px)}
+.person small,.sidefoot{font-size:clamp(12px,.85vw,14px)}
+.nav button{font-size:clamp(14px,.95vw,16px);padding:12px;min-height:46px}
+.main{padding:clamp(20px,2vw,32px);min-height:620px}
+.head{margin-bottom:clamp(18px,1.8vw,26px)}
+.head h2{font-size:clamp(23px,1.8vw,30px);line-height:1.25}
+.head p{font-size:clamp(14px,1vw,16px);line-height:1.5}
+.btn{font-size:clamp(14px,.95vw,16px);padding:11px 16px;min-height:46px}
+.stats{gap:clamp(10px,1.1vw,16px);margin-bottom:clamp(14px,1.2vw,20px)}
+.stat,.card{padding:clamp(15px,1.5vw,23px)}
+.stat small{font-size:clamp(13px,.9vw,15px)}
+.stat strong{font-size:clamp(27px,2vw,36px)}
+.stat span{font-size:clamp(12px,.82vw,14px);line-height:1.4}
+.card h3{font-size:clamp(16px,1.1vw,19px);margin-bottom:14px}
+.row{font-size:clamp(14px,.98vw,16px);padding:14px 0;line-height:1.45}
+.row small{font-size:clamp(12px,.85vw,14px);line-height:1.45}
+.tag{font-size:clamp(12px,.82vw,14px);padding:6px 10px}
+.notice{font-size:clamp(13px,.9vw,15px);line-height:1.6;padding:15px}
+.empty{font-size:clamp(14px,.95vw,16px);line-height:1.55}
+.table{font-size:clamp(14px,.95vw,16px)}
+.table th{font-size:clamp(12px,.82vw,14px)}
+.table th,.table td{padding:13px 10px}
+.field label{font-size:clamp(13px,.9vw,15px)}
+.field input,.field select,.field textarea{font-size:16px;min-height:46px;padding:12px}
+.hint{font-size:12px}
+.dialog{padding:clamp(20px,2vw,30px)}
+.dialog h3{font-size:clamp(20px,1.5vw,25px)}
+footer{font-size:12px;line-height:1.5}
+@media(min-width:1400px){.layout{grid-template-columns:280px minmax(0,1fr)}.main{padding:32px}.grid{gap:18px}}
+@media(max-width:800px){
+ .wrap{padding:22px 18px}.layout{display:flex;flex-direction:column;gap:13px}
+ .side{top:61px;padding:9px}.nav button{font-size:14px;min-height:44px;padding:10px 13px}
+ .main{padding:clamp(17px,3vw,24px)}.hero h1{font-size:clamp(27px,5vw,34px)}
+ .sub{font-size:15px}.head h2{font-size:clamp(22px,4vw,27px)}.head p{font-size:14px}
+ .stats{gap:10px}.stat{padding:15px}.stat small{font-size:13px}
+ .stat strong{font-size:clamp(25px,4vw,31px)}.stat span{font-size:12px}
+ .grid{grid-template-columns:minmax(0,1fr);gap:12px}.card h3{font-size:16px}
+ .row{font-size:14px}.row small{font-size:13px}.notice{font-size:14px}
+}
+@media(max-width:480px){
+ .top{padding:11px 13px;min-height:60px}.brand{font-size:18px}.brand small{font-size:8px}
+ .demo{font-size:10px;max-width:155px;padding:7px 9px}.wrap{padding:18px 12px}
+ .hero h1{font-size:27px}.eyebrow{font-size:10px}.sub{font-size:15px}
+ .profile label{font-size:14px}.profile select{font-size:16px;min-height:46px}
+ .side{top:59px}.nav button{font-size:13px;min-height:44px;padding:9px 12px}
+ .main{padding:16px}.head h2{font-size:23px}.head p{font-size:14px}
+ .btn{font-size:14px;min-height:46px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stats .stat:last-child{grid-column:1/-1}.stat{padding:14px}
+ .stat small{font-size:13px}.stat strong{font-size:26px}.stat span{font-size:12px}
+ .card{padding:15px}.card h3{font-size:16px}.row{font-size:14px;gap:9px}
+ .row small{font-size:13px}.tag{font-size:12px}.notice{font-size:13px}
+ .table{font-size:13px;min-width:600px}.table th{font-size:12px}
+ .field label{font-size:14px}.field input,.field select,.field textarea{font-size:16px}
+ .dialog h3{font-size:21px}footer{font-size:11px}
+}
+@media(max-width:360px){.wrap{padding-inline:9px}.brand{font-size:16px}.demo{font-size:9px;max-width:130px}.main{padding:13px}.hero h1{font-size:25px}.stat{padding:12px}}
+
+
+/* Día actual destacado en el horario semanal */
+.schedule-today{background:#eef5f0!important;border-left:4px solid #b99a62!important;padding-left:12px!important;border-radius:8px}
+.schedule-today .schedule-day-label{color:#173d32;font-weight:800}
+.schedule-today .schedule-day-number{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 6px;margin-right:4px;border-radius:50%;background:#173d32;color:#fff;font-weight:800;box-shadow:0 0 0 2px #b99a6233}
+.schedule-today .tag{background:#e1ede5;color:#173d32}
+.schedule-today .tag.gold{background:#f7f0e4;color:#94713d}
+</style>
+</head>
+<body>
+<div id="update-banner" role="status" aria-live="polite" style="display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:20;background:#173d32;color:#fff;padding:14px 16px;border-radius:12px;box-shadow:0 8px 28px #0003;align-items:center;justify-content:space-between;gap:12px;font:600 14px/1.4 system-ui"><span>Hay una nueva versión de Prestige disponible.</span><button id="apply-update" type="button" style="border:0;border-radius:8px;padding:10px 13px;background:#f3f2ea;color:#173d32;font-weight:750;white-space:nowrap">Actualizar</button></div>
+<header class="top"><div class="brand-lockup"><img class="brand-logo" src="https://static.wixstatic.com/media/ed3d67_322c2e952aa74fa39f0e2e52d5ac2a7e~mv2.png/v1/fill/w_519,h_390,al_c,q_85,enc_avif,quality_auto/prestige_landscaping_and_cleaning_logo.png" alt="Logotipo oficial de Prestige Jardinería y Limpieza" decoding="async"><div class="brand-copy"><span class="brand-name">PRESTIGE</span><small>JARDINERÍA Y LIMPIEZA</small></div></div><span class="demo">MODO DE DEMOSTRACIÓN · DATOS DE EJEMPLO</span></header>
+<div class="wrap">
+<section class="hero"><div><div class="eyebrow">PORTAL INTERNO · VISTA DEMOSTRACIÓN</div><h1 id="greeting">Bienvenido a Prestige</h1><div class="sub" id="subtitle">Operaciones y comunicación del equipo en un solo lugar.</div></div>
+<div class="profile"><label for="profile">Perfil de demostración:</label><select id="profile"><option value="admin">Administración · ADM-000</option><option value="manager-land">Gerencia · Jardinería</option><option value="manager-clean">Gerencia · Limpieza</option><option value="super-land">Supervisor · Jardinería</option><option value="super-clean">Supervisor · Limpieza</option><option value="employee-land">Empleado · Jardinería</option><option value="employee-clean">Empleado · Limpieza</option><option value="employee-both">Empleado autorizado · Ambos</option></select></div></section>
+<div class="layout"><aside class="side"><div class="person"><b id="person-name">Prestige</b><small id="person-role">Administración · ADM-000</small></div><nav class="nav" id="nav"></nav><div class="sidefoot">DEPARTAMENTO ACTIVO<br><b id="dept-label">Todos los departamentos</b></div></aside><main class="main" id="view" aria-live="polite"></main></div>
+<div class="notice"><b>Importante:</b> esta demostración guarda los cambios únicamente en este navegador. No crea cuentas, no envía correos electrónicos ni modifica la base de datos real de Prestige.</div>
+</div><footer>PRESTIGE JARDINERÍA Y LIMPIEZA · DEMOSTRACIÓN INTERACTIVA</footer>
+<div class="modal" id="modal"><form class="dialog" id="record-form"><h3 id="modal-title">Nuevo registro</h3><div id="fields"></div><div class="actions"><button type="button" class="btn alt" id="cancel">Cancelar</button><button class="btn" type="submit">Guardar en la demostración</button></div></form></div>
+<script>
+const $=id=>document.getElementById(id);
+const modules=[["inicio","⌂","Inicio"],["comunicados","▤","Comunicados oficiales"],["conversaciones","☷","Conversaciones"],["turnos","◷","Horario semanal"],["equipos","♧","Equipos"],["incidencias","⚑","Incidencias"],["personal","♙","Personal"]];
+const profiles={
+ admin:{name:"Prestige",role:"Administración",number:"ADM-000",dept:"Todos los departamentos",depts:["Jardinería","Limpieza"],views:modules.map(x=>x[0])},
+ "manager-land":{name:"María González",role:"Gerencia",number:"GER-001",dept:"Jardinería",depts:["Jardinería"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "manager-clean":{name:"Carlos Rivera",role:"Gerencia",number:"GER-002",dept:"Limpieza",depts:["Limpieza"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "super-land":{name:"José Martínez",role:"Supervisor",number:"SUP-001",dept:"Jardinería",depts:["Jardinería"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "super-clean":{name:"Ana López",role:"Supervisor",number:"SUP-002",dept:"Limpieza",depts:["Limpieza"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "employee-land":{name:"Luis Pérez",role:"Empleado",number:"EMP-001",dept:"Jardinería",depts:["Jardinería"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "employee-clean":{name:"Sofía Torres",role:"Empleado",number:"EMP-002",dept:"Limpieza",depts:["Limpieza"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "employee-both":{name:"Miguel Díaz",role:"Empleado autorizado",number:"EMP-003",dept:"Jardinería + Limpieza",depts:["Jardinería","Limpieza"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]}
+};
+const seed={
+ comunicados:[
+ {id:1,dept:"Todos",title:"Bienvenidos al portal Prestige",body:"Usaremos este espacio para avisos oficiales, políticas y novedades importantes.",date:"Hoy",by:"Administración"},
+ {id:2,dept:"Jardinería",title:"Preparación de equipos",body:"Revisar herramientas y equipo antes de salir a los servicios.",date:"Hoy",by:"Administración"},
+ {id:3,dept:"Limpieza",title:"Lista de suministros",body:"Confirmar los suministros necesarios antes del primer servicio.",date:"Ayer",by:"Administración"}],
+ conversaciones:[
+ {id:1,dept:"Jardinería",title:"Rutas de esta semana",body:"¿Alguien tiene sugerencias para organizar mejor las rutas?",date:"Hoy",by:"José Martínez"},
+ {id:2,dept:"Limpieza",title:"Productos para superficies",body:"Compartamos recomendaciones y experiencias del equipo.",date:"Ayer",by:"Ana López"}],
+ turnos:[
+ {id:1,code:"TUR-2026-001",dept:"Jardinería",title:"Residencia Green",date:"2026-11-25",time:"08:00",team:"Equipo Norte",status:"Programado"},
+ {id:2,code:"TUR-2026-002",dept:"Limpieza",title:"Oficinas Central",date:"2026-11-25",time:"09:00",team:"Equipo Limpieza A",status:"Programado"},
+ {id:3,code:"TUR-2026-003",dept:"Jardinería",title:"Complejo Oak",date:"2026-11-26",time:"07:30",team:"Equipo Sur",status:"Programado"}],
+ equipos:[
+ {id:1,dept:"Jardinería",title:"Equipo Norte",body:"Supervisor: José Martínez · 4 integrantes"},
+ {id:2,dept:"Jardinería",title:"Equipo Sur",body:"Supervisor: Roberto Cruz · 3 integrantes"},
+ {id:3,dept:"Limpieza",title:"Equipo Limpieza A",body:"Supervisora: Ana López · 3 integrantes"}],
+ incidencias:[
+ {id:1,dept:"Jardinería",title:"Herramienta faltante",body:"Se reportó la ausencia de una podadora al finalizar el servicio.",date:"Hoy",status:"En revisión",by:"José Martínez"},
+ {id:2,dept:"Limpieza",title:"Daño en propiedad",body:"Se documentó una marca accidental en una pared. Se notificó a Gerencia.",date:"Ayer",status:"Cerrada",by:"Ana López"}],
+ personal:[
+ {id:1,number:"ADM-000",name:"Prestige",role:"Administración",dept:"Todos",status:"Activo"},
+ {id:2,number:"GER-001",name:"María González",role:"Gerencia",dept:"Jardinería",status:"Activo"},
+ {id:3,number:"GER-002",name:"Carlos Rivera",role:"Gerencia",dept:"Limpieza",status:"Activo"},
+ {id:4,number:"SUP-001",name:"José Martínez",role:"Supervisor",dept:"Jardinería",status:"Activo"},
+ {id:5,number:"SUP-002",name:"Ana López",role:"Supervisor",dept:"Limpieza",status:"Activo"},
+ {id:6,number:"EMP-001",name:"Luis Pérez",role:"Empleado",dept:"Jardinería",status:"Activo"},
+ {id:7,number:"EMP-002",name:"Sofía Torres",role:"Empleado",dept:"Limpieza",status:"Activo"},
+ {id:8,number:"EMP-003",name:"Miguel Díaz",role:"Empleado autorizado",dept:"Ambos",status:"Activo"}]
+};
+const cloneSeed=()=>JSON.parse(JSON.stringify(seed));
+let db;
+try{
+ const stored=JSON.parse(localStorage.getItem("prestige-demo-db")||"null");
+ db=stored&&typeof stored==="object"?{...cloneSeed(),...stored}:cloneSeed();
+ for(const key of Object.keys(seed))if(!Array.isArray(db[key]))db[key]=cloneSeed()[key];
+ if(!Array.isArray(db.horarioSemanal))db.horarioSemanal=[];
+ if(!Array.isArray(db.historialHorarios))db.historialHorarios=[];
+}catch{db=cloneSeed()}
+let active="inicio",pendingType=null;
+let scheduleWeekStart=(()=>{const d=new Date();const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);d.setHours(0,0,0,0);return d})();
+const p=()=>profiles[$("profile").value];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const visible=(item)=>item.dept==="Todos"||p().depts.includes(item.dept);
+function save(){try{localStorage.setItem("prestige-demo-db",JSON.stringify(db))}catch{alert("El navegador no permitió guardar los cambios. Puedes continuar viendo la demostración, pero los datos no se conservarán.")}}
+function allowed(){return p().views}
+function renderNav(){$("nav").innerHTML=modules.filter(m=>allowed().includes(m[0])).map(m=>'<button class="'+(active===m[0]?"active":"")+'" data-page="'+m[0]+'">'+m[1]+' &nbsp;'+m[2]+'</button>').join("");}
+function header(title,desc,action=""){return '<div class="head"><div><h2>'+title+'</h2><p>'+desc+'</p></div>'+action+'</div>'}
+function rows(items,kind){if(!items.length)return '<div class="empty">Todavía no hay registros para mostrar.</div>';return items.map(x=>'<div class="row"><span><b>'+esc(x.title||x.name)+'</b><small>'+esc(x.body||x.number||"")+(x.date?" · "+esc(x.date):"")+'</small>'+(x.image?'<img class="announcement-image" src="'+esc(x.image)+'" alt="Imagen adjunta al comunicado" loading="lazy">':"")+'</span><span class="tag '+(x.status==="Cerrada"?"":"gold")+'">'+esc(x.status||x.dept||"")+(x.by?' · '+esc(x.by):"")+'</span></div>').join("")}
+function conversationRows(items){
+ if(!items.length)return '<div class="empty">Todavía no hay conversaciones en este departamento. ¡Inicia la primera!</div>';
+ return items.map(x=>{
+  const likes=Array.isArray(x.likes)?x.likes:[];
+  const comments=Array.isArray(x.comments)?x.comments:[];
+  const liked=likes.includes(p().number);
+  return '<article class="card" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><h3 style="margin:0 0 5px">'+esc(x.title)+'</h3><small>'+esc(x.by||"Miembro del equipo")+' · '+esc(x.date||"")+' · '+esc(x.dept)+'</small></div><span class="tag">'+esc(x.dept)+'</span></div><p style="margin:12px 0">'+esc(x.body)+'</p><div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap"><button type="button" class="btn alt" data-conv-like="'+x.id+'" aria-pressed="'+liked+'">'+(liked?'♥':'♡')+' Me gusta · '+likes.length+'</button><button type="button" class="btn alt" data-comment-open="'+x.id+'">Comentar · '+comments.length+'</button></div><div style="margin-top:13px">'+(comments.length?comments.map(c=>'<div class="row" style="margin:7px 0"><div><b>'+esc(c.by)+'</b><small>'+esc(c.date||"")+'</small><p style="margin:7px 0 0">'+esc(c.body)+'</p></div></div>').join(""):'<small class="hint">Todavía no hay comentarios. ¡Sé el primero en participar!</small>')+'</div><form data-comment-form="'+x.id+'" style="display:none;margin-top:12px"><div class="field"><label for="comment-'+x.id+'">Tu comentario</label><textarea id="comment-'+x.id+'" required placeholder="Escribe tu respuesta a esta conversación..."></textarea></div><button type="submit" class="btn">Publicar comentario</button></form></article>';
+ }).join("");
+}
+function incidentRows(items){
+ if(!items.length)return '<div class="empty">Todavía no hay incidencias registradas.</div>';
+ return items.map(x=>'<article class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+esc(x.title)+'</b><span class="tag gold">'+esc(x.status||"Pendiente")+'</span></div><small>Lugar: '+esc(x.location)+' · '+esc(x.date||"")+' · Reportó: '+esc(x.by)+(x.byNumber?' ('+esc(x.byNumber)+')':'')+(x.reporterRole?' · '+esc(x.reporterRole):'')+'</small><p style="margin:9px 0;font-size:13px">'+esc(x.body)+'</p>'+(x.image?'<img class="announcement-image" src="'+esc(x.image)+'" alt="Fotografía de evidencia de la incidencia" loading="lazy">':'')+(x.reviewNote?'<div class="notice"><b>Seguimiento:</b> '+esc(x.reviewNote)+'<br><small>Revisado por '+esc(x.reviewBy||"Supervisor")+'</small></div>':'')+(!p().role.includes("Empleado") && !x.reviewNote?'<div style="margin-top:10px"><button class="btn alt" data-review="'+x.id+'">Agregar seguimiento</button></div>':'')+'</article>').join("");
+}
+function table(items,cols){if(!items.length)return '<div class="empty">No hay registros disponibles.</div>';return '<div class="tablebox"><table class="table"><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join("")+'</tr></thead><tbody>'+items.map(x=>'<tr>'+cols.map(c=>'<td>'+esc(x[c[0]])+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>'}
+
+function dateKey(d){const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);return local.toISOString().slice(0,10)}
+function weekDays(){return Array.from({length:7},(_,i)=>{const d=new Date(scheduleWeekStart);d.setDate(d.getDate()+i);return d})}
+function capitalizeDateLabel(value){return value.replace(/(^|[\\s,–·])([a-záéíóúüñ])/gi,(_,separator,letter)=>separator+letter.toLocaleUpperCase("es"))}
+function formatScheduleDate(date,options){return capitalizeDateLabel(date.toLocaleDateString("es-US",options))}
+function weekLabel(){const ds=weekDays();return formatScheduleDate(ds[0],{day:"numeric",month:"short"})+" – "+formatScheduleDate(ds[6],{day:"numeric",month:"short",year:"numeric"})}
+function canManageSchedule(){return p().role==="Administración"||p().role==="Gerencia"}
+function scheduleVisible(x){
+ const u=p();
+ if(u.role==="Administración")return true;
+ if(u.role==="Gerencia")return u.depts.includes(x.dept);
+ if(u.role==="Supervisor")return x.supervisorNumber===u.number;
+ return x.employeeNumber===u.number&&x.published===true;
+}
+function scheduleHistoryHtml(){
+ const u=p();if(u.role!=="Administración"&&u.role!=="Gerencia")return "";
+ const items=(db.historialHorarios||[]).filter(x=>u.role==="Administración"||u.depts.includes(x.dept)).slice(0,8);
+ if(!items.length)return "";
+ return '<section class="card" style="margin-top:14px"><h3>Historial de cambios</h3>'+items.map(x=>'<div class="row"><span><b>'+esc(x.action)+' · '+esc(x.employeeName)+'</b><small>'+esc(x.date)+' · '+esc(x.by)+' ('+esc(x.byNumber)+')</small></span><span class="tag">'+new Date(x.at).toLocaleString("es-ES")+'</span></div>').join("")+'</section>';
+}
+function renderWeeklySchedule(){
+ const u=p(),days=weekDays(),start=dateKey(days[0]),end=dateKey(days[6]);
+ const records=(db.horarioSemanal||[]).filter(x=>x.date>=start&&x.date<=end&&scheduleVisible(x));
+ const manager=canManageSchedule();
+ const nav='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 16px"><button class="btn alt" data-week="-7">← Semana anterior</button><b>'+weekLabel()+'</b><button class="btn alt" data-week="7">Semana siguiente →</button></div>';
+ const actions=manager?'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn alt" data-copy-week="1">Copiar semana anterior</button><button class="btn" data-new="horario">+ Asignar día</button><button class="btn" data-publish-week="1">Publicar horario</button></div>':"";
+ const intro=manager?"Asigna días de trabajo y descanso, Equipo, supervisor y horas. Publica para que cada empleado vea únicamente su propio horario.":u.role==="Supervisor"?"Consulta los días y turnos de los empleados asignados a tus equipos.":"Aquí puedes consultar únicamente tus días, horas, Equipo y supervisor asignado.";
+ const body=days.map(d=>{
+  const key=dateKey(d),list=records.filter(x=>x.date===key);
+  const today=key===dateKey(new Date()),rowClass=today?"row schedule-today":"row";const dayLabel='<span class="schedule-day-label">'+(today?'<span class="schedule-day-number">'+d.getDate()+'</span>':"")+formatScheduleDate(d,{weekday:"long",day:"numeric",month:"short"})+'</span>';
+  if(!list.length)return '<div class="'+rowClass+'"><span><b>'+dayLabel+'</b><small>Sin asignación publicada</small></span><span class="tag gold">Sin horario</span></div>';
+  return list.map(x=>'<div class="'+rowClass+'"><span><b>'+dayLabel+' · '+esc(x.employeeName)+'</b><small>'+(x.status==="Descansa"?"Día de descanso":esc(x.startTime||"—")+" a "+esc(x.endTime||"—"))+' · '+esc(x.team||"Sin equipo")+' · Supervisor: '+esc(x.supervisorName||"Sin asignar")+'</small></span><span class="tag '+(x.status==="Descansa"?"gold":"")+'">'+esc(x.status)+(x.published?" · Publicado":" · Borrador")+'</span></div>').join("");
+ }).join("");
+ return header("Horario semanal",intro,actions)+nav+'<section class="card"><h3>Programación de '+weekLabel()+'</h3>'+body+'</section>'+scheduleHistoryHtml()+'<div class="notice">'+(manager?"Los cambios quedan guardados en esta demostración. Solo al publicar estarán visibles para el empleado. Se conserva un registro de quién hizo cada asignación.":u.role==="Supervisor"?"Solo aparecen asignaciones de los equipos que tienes a cargo. No puedes modificar el horario oficial.":"Los horarios y cambios publicados son privados para cada empleado.")+'</div>';
+}
+function openScheduleForm(){
+ pendingType="horario";
+ const u=p(),dept=u.role==="Administración"?["Jardinería","Limpieza"]:u.depts;
+ const people=db.personal.filter(x=>x.role.includes("Empleado")&&(x.dept==="Ambos"||dept.includes(x.dept)));
+ const teams=db.equipos.filter(x=>dept.includes(x.dept));
+ const supervisors=db.personal.filter(x=>x.role==="Supervisor"&&dept.includes(x.dept));
+ const opts=a=>a.map(x=>'<option value="'+esc(x.number||x.title)+'">'+esc(x.name||x.title)+'</option>').join("");
+ $("modal-title").textContent="Asignar día de trabajo o descanso";
+ $("fields").innerHTML='<div class="field"><label for="f-dept">Departamento</label><select id="f-dept">'+dept.map(x=>'<option>'+esc(x)+'</option>').join("")+'</select></div><div class="field"><label for="f-employee">Empleado</label><select id="f-employee" required>'+opts(people)+'</select></div><div class="field"><label for="f-date">Día</label><input id="f-date" type="date" required value="'+dateKey(scheduleWeekStart)+'"></div><div class="field"><label for="f-status">Asignación</label><select id="f-status"><option>Trabaja</option><option>Descansa</option></select></div><div class="field"><label for="f-team">Equipo</label><select id="f-team"><option value="">Sin asignar</option>'+opts(teams)+'</select></div><div class="field"><label for="f-supervisor">Supervisor</label><select id="f-supervisor"><option value="">Sin asignar</option>'+opts(supervisors)+'</select></div><div class="field"><label for="f-start">Hora de entrada</label><input id="f-start" type="time" value="08:00"></div><div class="field"><label for="f-end">Hora de salida</label><input id="f-end" type="time" value="16:00"></div><p class="hint">Los días de descanso no requieren horas ni Equipo. Los cambios se guardan como borrador hasta publicar.</p>';
+ $("modal").classList.add("show");
+}
+
+function render(){
+ const u=p(),dept=u.dept; $("greeting").textContent="Bienvenido, "+u.name;$("subtitle").textContent=u.role+" · "+u.number;$("person-name").textContent=u.name;$("person-role").textContent=u.role+" · "+u.number;$("dept-label").textContent=dept;renderNav();
+ const count=k=>db[k].filter(visible).length;
+ let html="";
+ if(active==="inicio"){
+ html=header("Resumen de actividad","Información correspondiente a "+dept+".")+
+ '<div class="stats"><div class="card stat"><small>Horarios programados</small><strong>'+count("turnos")+'</strong><span>En los departamentos asignados</span></div><div class="card stat"><small>Incidencias registradas</small><strong>'+count("incidencias")+'</strong><span>Con historial guardado</span></div><div class="card stat"><small>Conversaciones</small><strong>'+count("conversaciones")+'</strong><span>Participación del personal</span></div></div>'+
+ '<div class="grid"><section class="card"><h3>Actividad reciente</h3>'+rows([...db.incidencias.filter(visible).slice(0,2),...db.comunicados.filter(visible).slice(0,1)],"")+'</section><section class="card"><h3>Accesos directos</h3>'+modules.filter(m=>allowed().includes(m[0])&&m[0]!=="inicio").map(m=>'<div class="row"><b>'+m[2]+'</b><button class="btn alt" data-page="'+m[0]+'">Ver</button></div>').join("")+'</section></div>';
+ }else if(active==="comunicados"){
+ html=header("Comunicados oficiales","Avisos oficiales publicados por Administración y Gerencia.",["Administración","Gerencia"].includes(u.role)?'<button class="btn" data-new="comunicados">+ Publicar comunicado</button>':"")+'<section class="card"><h3>Panel de comunicados</h3>'+rows(db.comunicados.filter(visible))+'</section><div class="notice">Este módulo es independiente de Conversaciones. Administración y Gerencia pueden publicar comunicados oficiales.</div>';
+ }else if(active==="conversaciones"){
+ html=header("Conversaciones del personal","Haz preguntas, comenta y comparte ideas con tu departamento.",'<button class="btn" data-new="conversaciones">+ Nueva conversación</button>')+'<section class="card"><h3>Conversaciones y colaboración · '+esc(dept)+'</h3>'+conversationRows(db.conversaciones.filter(visible))+'</section><div class="notice">Las conversaciones y sus comentarios son independientes de los comunicados oficiales.</div>';
+ }else if(active==="turnos"){
+ html=renderWeeklySchedule();
+ }else if(active==="equipos"){
+ html=header("Equipos de trabajo","Organización de los equipos por departamento.",allowed().includes("personal")?'<button class="btn" data-new="equipos">+ Crear equipo</button>':"")+'<section class="card"><h3>Equipos asignados</h3>'+rows(db.equipos.filter(visible))+'</section>';
+ }else if(active==="incidencias"){
+ html=header("Incidencias","Informes con fotografía obligatoria y ubicación del incidente.",'<button class="btn" data-new="incidencias">+ Registrar incidencia</button>')+'<section class="card"><h3>Historial de incidencias</h3>'+incidentRows(db.incidencias.filter(visible))+'</section><div class="notice">Los informes creados por los empleados quedan identificados para que el supervisor pueda revisarlos y agregar seguimiento. En esta demostración, los avisos a Gerencia y Administración son simulados.</div>';
+ }else if(active==="personal"){
+ html=header("Administración de personal","Vista general de funciones y departamentos.")+'<section class="card"><h3>Directorio de ejemplo</h3>'+table(db.personal,[["number","Número"],["name","Nombre"],["role","Rol"],["dept","Departamento"],["status","Estado"]])+'</section><div class="notice">En el portal real, Administración gestionará invitaciones y permisos. Aquí no se envían invitaciones.</div>';
+ }
+ $("view").innerHTML=html;
+}
+function openForm(type){
+ pendingType=type;const fields={
+ comunicados:[["title","Título","text"],["body","Contenido","textarea"],["image","Imagen (opcional)","file"],["dept","Departamento","select"]],
+ conversaciones:[["title","Tema","text"],["body","Mensaje inicial","textarea"]],
+ turnos:[["title","Servicio o cliente o cliente","text"],["date","Fecha","date"],["time","Hora","time"],["team","Equipo asignado","text"],["dept","Departamento","select"]],
+ equipos:[["title","Nombre del equipo","text"],["body","Supervisor e integrantes","text"],["dept","Departamento","select"]],
+ incidencias:[["title","Tipo o título de la incidencia","text"],["location","Lugar exacto (dirección, propiedad o área de trabajo)","text"],["body","Descripción detallada","textarea"],["image","Fotografía obligatoria","file"],["dept","Departamento","select"]]
+ }[type];
+ $("modal-title").textContent=({comunicados:"Publicar comunicado oficial",conversaciones:"Iniciar conversación",turnos:"Crear horario",equipos:"Crear equipo",incidencias:"Registrar incidencia"})[type];
+ $("fields").innerHTML=fields.map(([id,label,kind])=>{
+  let control="";
+  if(kind==="textarea")control='<textarea id="f-'+id+'" required></textarea>';
+  else if(kind==="file")control='<input id="f-'+id+'" type="file" accept="image/*" '+(type==="incidencias"?"required":"")+'><small class="hint">'+(type==="incidencias"?"Obligatoria. Adjunta una fotografía clara como evidencia (máximo 8 MB).":"Opcional. La imagen se optimizará para que el comunicado cargue más rápido.")+'</small>';
+  else if(kind==="select")control='<select id="f-'+id+'">'+(type==="comunicados"?(p().role==="Administración"?["Todos","Jardinería","Limpieza"]:p().depts):p().depts).map(v=>'<option>'+esc(v)+'</option>').join("")+'</select>';
+  else control='<input id="f-'+id+'" type="'+kind+'" required '+(id==="date"?'value="2026-11-28"':"")+'>';
+  return '<div class="field"><label for="f-'+id+'">'+label+'</label>'+control+'</div>';
+ }).join("")+'<p class="hint">Los datos se guardan únicamente en este navegador.</p>';
+ $("modal").classList.add("show");
+}
+$("record-form").addEventListener("submit",async e=>{
+ e.preventDefault();const type=pendingType;const get=id=>$("f-"+id)?.value||"";if(type==="horario"){const dept=get("dept"),employee=db.personal.find(x=>x.number===get("employee")),team=db.equipos.find(x=>x.title===get("team")),supervisor=db.personal.find(x=>x.number===get("supervisor"));if(!employee){alert("Selecciona un empleado.");return}if(!p().depts.includes(dept)&&p().role!=="Administración"){alert("No tienes permiso para este departamento.");return}if(employee.dept!=="Ambos"&&employee.dept!==dept){alert("El empleado seleccionado no pertenece a ese departamento.");return}if(team&&team.dept!==dept){alert("El Equipo seleccionado pertenece a otro departamento.");return}if(supervisor&&supervisor.dept!==dept){alert("El supervisor seleccionado pertenece a otro departamento.");return}const rec={id:Date.now(),dept,employeeNumber:employee.number,employeeName:employee.name,date:get("date"),status:get("status"),team:team?.title||"",supervisorNumber:supervisor?.number||"",supervisorName:supervisor?.name||"",startTime:get("status")==="Descansa"?"":get("start"),endTime:get("status")==="Descansa"?"":get("end"),published:false,createdBy:p().number,createdByName:p().name,updatedAt:new Date().toISOString()};const idx=db.horarioSemanal.findIndex(x=>x.employeeNumber===rec.employeeNumber&&x.date===rec.date);db.historialHorarios.unshift({id:Date.now()+1,employeeNumber:rec.employeeNumber,employeeName:rec.employeeName,date:rec.date,dept:rec.dept,action:idx>=0?"Asignación actualizada":"Asignación creada",by:p().name,byNumber:p().number,role:p().role,at:new Date().toISOString()});if(idx>=0)db.horarioSemanal[idx]=rec;else db.horarioSemanal.unshift(rec);save();$("modal").classList.remove("show");render();return}if(type==="seguimiento"){const item=db.incidencias.find(x=>x.id===Number($("record-form").dataset.reviewId));if(item){item.reviewNote=get("review").trim();item.reviewBy=p().name;item.status=get("status");save()}$("record-form").dataset.reviewId="";$("modal").classList.remove("show");render();return}const dept=get("dept")||p().depts[0];const record={id:Date.now(),dept,title:get("title"),body:get("body"),date:new Date().toLocaleString("es-US"),by:p().name,byNumber:p().number,reporterRole:p().role};
+ if(type==="comunicados"||type==="incidencias"){const file=$("f-image")?.files?.[0];if(type==="incidencias"&&!file){alert("Debes adjuntar una fotografía para registrar la incidencia.");return}if(file){if(!file.type.startsWith("image/")){alert("Selecciona un archivo de imagen válido.");return}if(file.size>8*1024*1024){alert("La imagen debe pesar menos de 8 MB.");return}try{record.image=await optimizeAnnouncementImage(file)}catch{alert("No se pudo procesar la imagen. Intenta con otra.");return}}}
+ if(type==="turnos"){record.code="TUR-DEMO-"+String(Date.now()).slice(-5);record.date=get("date");record.time=get("time");record.team=get("team");record.status="Programado"}
+ if(type==="incidencias"){record.location=get("location").trim();if(!record.location){alert("Indica el lugar exacto donde ocurrió la incidencia.");return}record.status=p().role.includes("Empleado")?"Pendiente de revisión":"En revisión";}
+ if(type==="equipos")record.status="Activo";
+ if(type==="conversaciones"){record.comments=[];record.likes=[];}db[type].unshift(record);save();$("modal").classList.remove("show");render();
+});
+function openIncidentReview(id){
+ const item=db.incidencias.find(x=>x.id===Number(id));if(!item)return;
+ pendingType="seguimiento";$("modal-title").textContent="Seguimiento de incidencia";
+ $("fields").innerHTML='<p class="hint">Incidencia: <b>'+esc(item.title)+'</b> · '+esc(item.location)+'</p><div class="field"><label for="f-review">Observaciones del supervisor o de Gerencia</label><textarea id="f-review" required placeholder="Escribe la revisión, las acciones tomadas o los próximos pasos."></textarea></div><div class="field"><label for="f-status">Estado</label><select id="f-status"><option>En revisión</option><option>En seguimiento</option><option>Resuelta</option></select></div>';
+ $("record-form").dataset.reviewId=String(item.id);$("modal").classList.add("show");
+}
+function optimizeAnnouncementImage(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{const scale=Math.min(1,1400/Math.max(img.width,img.height)),canvas=document.createElement("canvas");canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,canvas.width,canvas.height);URL.revokeObjectURL(url);resolve(canvas.toDataURL("image/jpeg",.78))};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Imagen inválida"))};img.src=url})}
+$("cancel").onclick=()=>$("modal").classList.remove("show");
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("show")});
+document.addEventListener("click",e=>{
+ const page=e.target.closest("[data-page]");if(page){active=page.dataset.page;render();return}
+ const like=e.target.closest("[data-conv-like]");if(like){const item=db.conversaciones.find(x=>x.id===Number(like.dataset.convLike));if(item){if(!Array.isArray(item.likes))item.likes=[];const who=p().number;item.likes=item.likes.includes(who)?item.likes.filter(v=>v!==who):[...item.likes,who];save();render()}return}
+ const openComment=e.target.closest("[data-comment-open]");if(openComment){const form=document.querySelector('[data-comment-form="'+openComment.dataset.commentOpen+'"]');if(form){form.style.display=form.style.display==="none"?"block":"none";if(form.style.display==="block")form.querySelector("textarea").focus()}return}
+ const review=e.target.closest("[data-review]");if(review){openIncidentReview(review.dataset.review);return}
+ const week=e.target.closest("[data-week]");if(week){scheduleWeekStart.setDate(scheduleWeekStart.getDate()+Number(week.dataset.week));render();return}
+ const copy=e.target.closest("[data-copy-week]");if(copy){if(!canManageSchedule())return;const from=new Date(scheduleWeekStart);from.setDate(from.getDate()-7);const a=dateKey(from),b=dateKey(new Date(from.getTime()+6*86400000));const prior=db.horarioSemanal.filter(x=>x.date>=a&&x.date<=b&&p().depts.includes(x.dept));prior.forEach(x=>{const d=new Date(x.date+"T12:00:00");d.setDate(d.getDate()+7);const y={...x,id:Date.now()+Math.random(),date:dateKey(d),published:false,createdBy:p().number,createdByName:p().name,updatedAt:new Date().toISOString()};db.historialHorarios.unshift({id:Date.now()+Math.random(),employeeNumber:y.employeeNumber,employeeName:y.employeeName,date:y.date,dept:y.dept,action:"Horario copiado de la semana anterior",by:p().name,byNumber:p().number,role:p().role,at:new Date().toISOString()});const i=db.horarioSemanal.findIndex(z=>z.employeeNumber===y.employeeNumber&&z.date===y.date);if(i>=0)db.horarioSemanal[i]=y;else db.horarioSemanal.push(y)});save();render();alert(prior.length?"Se copió la programación anterior como borrador. Revisa y publícala.":"No hay asignaciones en la semana anterior para copiar.");return}
+ const publish=e.target.closest("[data-publish-week]");if(publish){if(!canManageSchedule())return;const a=dateKey(scheduleWeekStart),b=dateKey(weekDays()[6]);let n=0;db.horarioSemanal.forEach(x=>{if(x.date>=a&&x.date<=b&&(p().role==="Administración"||p().depts.includes(x.dept))){x.published=true;x.publishedBy=p().number;x.publishedByName=p().name;x.publishedAt=new Date().toISOString();db.historialHorarios.unshift({id:Date.now()+n,employeeNumber:x.employeeNumber,employeeName:x.employeeName,date:x.date,dept:x.dept,action:"Horario publicado",by:p().name,byNumber:p().number,role:p().role,at:new Date().toISOString()});n++}});save();render();alert(n?"Horario publicado. Los empleados podrán consultar únicamente sus propias asignaciones.":"No hay asignaciones para publicar.");return}
+ const add=e.target.closest("[data-new]");if(add){if(add.dataset.new==="horario")openScheduleForm();else openForm(add.dataset.new)}
+});
+document.addEventListener("submit",e=>{
+ const form=e.target.closest("[data-comment-form]");if(!form)return;
+ e.preventDefault();const item=db.conversaciones.find(x=>x.id===Number(form.dataset.commentForm));const field=form.querySelector("textarea");const body=field.value.trim();if(!item||!body)return;
+ if(!Array.isArray(item.comments))item.comments=[];
+ item.comments.push({id:Date.now(),body,by:p().name,byNumber:p().number,date:new Date().toLocaleString("es-US")});
+ save();render();
+});
+$("profile").addEventListener("change",()=>{active="inicio";render()});
+let highlightedToday=dateKey(new Date());
+setInterval(()=>{const now=dateKey(new Date());if(now!==highlightedToday){highlightedToday=now;if(active==="turnos")render();}},60000);
+render();
+</script><!-- Publicación de la corrección de renderizado -->
+<script>
+/* PRESTIGE_PWA_UPDATE */
+if ("serviceWorker" in navigator) {
+  let refreshing = false;
+  const banner = document.getElementById("update-banner");
+  const apply = document.getElementById("apply-update");
+  const showUpdate = registration => {
+    if (registration.waiting && navigator.serviceWorker.controller) banner.style.display = "flex";
+  };
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!refreshing) { refreshing = true; window.location.reload(); }
+  });
+  window.addEventListener("load", async () => {
+    try {
+      const registration = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+      showUpdate(registration);
+      registration.addEventListener("updatefound", () => {
+        const installing = registration.installing;
+        if (!installing) return;
+        installing.addEventListener("statechange", () => {
+          if (installing.state === "installed") showUpdate(registration);
+        });
+      });
+      await registration.update();
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") registration.update().catch(() => {});
+      });
+      apply.addEventListener("click", () => {
+        if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
+      });
+    } catch (error) {
+      console.warn("No se pudo activar la actualización automática de Prestige.", error);
+    }
+  });
+}
+</script>
+</body></html>

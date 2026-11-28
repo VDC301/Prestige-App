@@ -1,32 +1,33 @@
 # Prestige Landscaping & Cleaning — Portal
 
-Portal interno en español, desarrollado inicialmente como una aplicación web progresiva (PWA) estática.
+Portal interno en español para el equipo Prestige.
 
-## Estado actual
+## Estado del proyecto
 
-Esta primera entrega contiene:
-- Interfaz adaptable a móviles y escritorio.
-- Navegación en español.
-- Vistas de demostración para Administración, Gerencia, Supervisión y Empleados.
-- Separación visual de Landscaping y Cleaning.
-- Perfil híbrido de ejemplo para representar una asignación doble autorizada.
-- Módulos iniciales: comunicados oficiales, conversaciones, turnos, equipos, incidencias, personal y configuración.
-- Manifiesto PWA y caché inicial para abrir la interfaz sin conexión.
+La rama main contiene la primera interfaz demostrativa y la estructura PWA. La rama tech-foundation añade la primera base de arquitectura para backend y seguridad:
 
-## Importante: seguridad y datos reales
+- Esquema PostgreSQL inicial para Supabase.
+- Políticas Row Level Security (RLS) para aislar departamentos.
+- Roles de Administración, Gerencia, Supervisión y Empleado.
+- Asignaciones departamentales explícitas; una asignación doble requiere autorización administrativa y deja constancia.
+- Tablas separadas para comunicados oficiales y conversaciones.
+- Equipos, turnos e incidencias.
+- Edge Function para iniciar sesión con número de empleado y contraseña.
+- Límite de solicitudes previo a la búsqueda del número de empleado, con contador atómico en PostgreSQL y huella HMAC de la IP de origen.
+- Índices adicionales para las claves foráneas detectadas por el asesor de rendimiento.
+- Bloqueo por empleado para impedir que altas simultáneas excedan el máximo de dos departamentos.
+- Validación de supervisores de equipo y protección de asignaciones utilizadas por equipos, turnos e incidencias.
+- Validación cruzada de miembros, turnos e incidencias, con bloqueos por empleado para evitar inconsistencias concurrentes.
+- Revocación de privilegios de tabla TRUNCATE, REFERENCES y TRIGGER a los roles de navegador, que no necesitan esos permisos y pueden eludir o rodear los controles RLS.
 
-Los perfiles actuales son únicamente demostrativos y se cambian desde la interfaz. No constituyen autenticación ni control de acceso seguro. No introducir datos personales, contraseñas, información de empleados ni datos operativos reales en esta versión.
+## Seguridad
 
-GitHub Pages puede alojar la interfaz pública, pero no debe utilizarse como base de datos ni como mecanismo de autorización. Antes de usar el portal en operaciones reales se debe integrar un backend con autenticación, base de datos, permisos aplicados en el servidor, auditoría y sincronización segura sin conexión.
+Los perfiles de demostración del frontend no son autenticación real. No introducir información personal ni operativa en esta versión. La función de acceso y el esquema SQL requieren un proyecto Supabase configurado, secretos del servidor, creación segura de la primera cuenta administrativa y pruebas RLS antes de producción. Las migraciones 008–018 y las Edge Functions siguen en la rama de desarrollo; no están desplegadas en el proyecto activo.
+
+Nunca colocar la clave service_role en el navegador o en este repositorio.
+
+Consulta docs/ARQUITECTURA-SEGURIDAD.md para los pasos de configuración y validación.
 
 ## Publicación
 
-El sitio puede publicarse desde GitHub Pages seleccionando la rama `main` y la carpeta `/(root)` en Settings → Pages. La publicación requiere activar Pages en la configuración del repositorio.
-
-## Próximas etapas
-
-1. Revisar la interfaz y completar los flujos de cada módulo.
-2. Diseñar el modelo de datos y los permisos por departamento.
-3. Integrar autenticación individual mediante número de empleado y contraseña.
-4. Implementar almacenamiento y sincronización segura para uso sin conexión.
-5. Probar roles, aislamiento de departamentos, auditoría y notificaciones antes del lanzamiento.
+El frontend puede alojarse en GitHub Pages. La base de datos, autenticación y funciones se ejecutan en Supabase, no en GitHub Pages.
