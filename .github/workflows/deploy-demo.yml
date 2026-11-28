@@ -30,6 +30,8 @@ jobs:
         run: |
           mkdir -p _site
           cp demo.html _site/index.html
+          mkdir -p _site/assets
+          cp -R assets/. _site/assets/
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
