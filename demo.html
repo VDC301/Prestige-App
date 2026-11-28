@@ -163,6 +163,13 @@ footer{font-size:12px;line-height:1.5}
 }
 @media(max-width:360px){.wrap{padding-inline:9px}.brand{font-size:16px}.demo{font-size:9px;max-width:130px}.main{padding:13px}.hero h1{font-size:25px}.stat{padding:12px}}
 
+
+/* Día actual destacado en el horario semanal */
+.schedule-today{background:#eef5f0!important;border-left:4px solid #b99a62!important;padding-left:12px!important;border-radius:8px}
+.schedule-today .schedule-day-label{color:#173d32;font-weight:800}
+.schedule-today .schedule-day-number{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;padding:0 6px;margin-right:4px;border-radius:50%;background:#173d32;color:#fff;font-weight:800;box-shadow:0 0 0 2px #b99a6233}
+.schedule-today .tag{background:#e1ede5;color:#173d32}
+.schedule-today .tag.gold{background:#f7f0e4;color:#94713d}
 </style>
 </head>
 <body>
@@ -279,8 +286,9 @@ function renderWeeklySchedule(){
  const intro=manager?"Asigna días de trabajo y descanso, Equipo, supervisor y horas. Publica para que cada empleado vea únicamente su propio horario.":u.role==="Supervisor"?"Consulta los días y turnos de los empleados asignados a tus equipos.":"Aquí puedes consultar únicamente tus días, horas, Equipo y supervisor asignado.";
  const body=days.map(d=>{
   const key=dateKey(d),list=records.filter(x=>x.date===key);
-  if(!list.length)return '<div class="row"><span><b>'+formatScheduleDate(d,{weekday:"long",day:"numeric",month:"short"})+'</b><small>Sin asignación publicada</small></span><span class="tag gold">Sin horario</span></div>';
-  return list.map(x=>'<div class="row"><span><b>'+formatScheduleDate(d,{weekday:"long",day:"numeric",month:"short"})+' · '+esc(x.employeeName)+'</b><small>'+(x.status==="Descansa"?"Día de descanso":esc(x.startTime||"—")+" a "+esc(x.endTime||"—"))+' · '+esc(x.team||"Sin equipo")+' · Supervisor: '+esc(x.supervisorName||"Sin asignar")+'</small></span><span class="tag '+(x.status==="Descansa"?"gold":"")+'">'+esc(x.status)+(x.published?" · Publicado":" · Borrador")+'</span></div>').join("");
+  const today=key===dateKey(new Date()),rowClass=today?"row schedule-today":"row";const dayLabel='<span class="schedule-day-label">'+(today?'<span class="schedule-day-number">'+d.getDate()+'</span>':"")+formatScheduleDate(d,{weekday:"long",day:"numeric",month:"short"})+'</span>';
+  if(!list.length)return '<div class="'+rowClass+'"><span><b>'+dayLabel+'</b><small>Sin asignación publicada</small></span><span class="tag gold">Sin horario</span></div>';
+  return list.map(x=>'<div class="'+rowClass+'"><span><b>'+dayLabel+' · '+esc(x.employeeName)+'</b><small>'+(x.status==="Descansa"?"Día de descanso":esc(x.startTime||"—")+" a "+esc(x.endTime||"—"))+' · '+esc(x.team||"Sin equipo")+' · Supervisor: '+esc(x.supervisorName||"Sin asignar")+'</small></span><span class="tag '+(x.status==="Descansa"?"gold":"")+'">'+esc(x.status)+(x.published?" · Publicado":" · Borrador")+'</span></div>').join("");
  }).join("");
  return header("Horario semanal",intro,actions)+nav+'<section class="card"><h3>Programación de '+weekLabel()+'</h3>'+body+'</section>'+scheduleHistoryHtml()+'<div class="notice">'+(manager?"Los cambios quedan guardados en esta demostración. Solo al publicar estarán visibles para el empleado. Se conserva un registro de quién hizo cada asignación.":u.role==="Supervisor"?"Solo aparecen asignaciones de los equipos que tienes a cargo. No puedes modificar el horario oficial.":"Los horarios y cambios publicados son privados para cada empleado.")+'</div>';
 }
