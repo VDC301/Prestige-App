@@ -4,6 +4,8 @@ on:
     branches: [pilot-preparation]
     paths:
       - "demo.html"
+      - "manifest.webmanifest"
+      - "sw.js"
       - ".github/workflows/deploy-demo.yml"
   workflow_dispatch:
 permissions:
@@ -32,6 +34,7 @@ jobs:
           cp demo.html _site/index.html
           mkdir -p _site/assets
           cp -R assets/. _site/assets/
+          cp manifest.webmanifest sw.js _site/
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:
