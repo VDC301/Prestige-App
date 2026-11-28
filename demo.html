@@ -381,6 +381,8 @@ document.addEventListener("submit",e=>{
  save();render();
 });
 $("profile").addEventListener("change",()=>{active="inicio";render()});
+let highlightedToday=dateKey(new Date());
+setInterval(()=>{const now=dateKey(new Date());if(now!==highlightedToday){highlightedToday=now;if(active==="turnos")render();}},60000);
 render();
 </script><!-- Publicación de la corrección de renderizado -->
 <script>
