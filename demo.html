@@ -262,6 +262,12 @@ function scheduleVisible(x){
  if(u.role==="Supervisor")return x.supervisorNumber===u.number;
  return x.employeeNumber===u.number&&x.published===true;
 }
+function scheduleHistoryHtml(){
+ const u=p();if(u.role!=="Administración"&&u.role!=="Gerencia")return "";
+ const items=(db.historialHorarios||[]).filter(x=>u.role==="Administración"||u.depts.includes(x.dept)).slice(0,8);
+ if(!items.length)return "";
+ return '<section class="card" style="margin-top:14px"><h3>Historial de cambios</h3>'+items.map(x=>'<div class="row"><span><b>'+esc(x.action)+' · '+esc(x.employeeName)+'</b><small>'+esc(x.date)+' · '+esc(x.by)+' ('+esc(x.byNumber)+')</small></span><span class="tag">'+new Date(x.at).toLocaleString("es-ES")+'</span></div>').join("")+'</section>';
+}
 function renderWeeklySchedule(){
  const u=p(),days=weekDays(),start=dateKey(days[0]),end=dateKey(days[6]);
  const records=(db.horarioSemanal||[]).filter(x=>x.date>=start&&x.date<=end&&scheduleVisible(x));
@@ -274,7 +280,7 @@ function renderWeeklySchedule(){
   if(!list.length)return '<div class="row"><span><b>'+d.toLocaleDateString("es-US",{weekday:"long",day:"numeric",month:"short"})+'</b><small>Sin asignación publicada</small></span><span class="tag gold">Sin horario</span></div>';
   return list.map(x=>'<div class="row"><span><b>'+d.toLocaleDateString("es-US",{weekday:"long",day:"numeric",month:"short"})+' · '+esc(x.employeeName)+'</b><small>'+(x.status==="Descansa"?"Día de descanso":esc(x.startTime||"—")+" a "+esc(x.endTime||"—"))+' · '+esc(x.team||"Sin equipo")+' · Supervisor: '+esc(x.supervisorName||"Sin asignar")+'</small></span><span class="tag '+(x.status==="Descansa"?"gold":"")+'">'+esc(x.status)+(x.published?" · Publicado":" · Borrador")+'</span></div>').join("");
  }).join("");
- return header("Horario semanal",intro,actions)+nav+'<section class="card"><h3>Programación de '+weekLabel()+'</h3>'+body+'</section><div class="notice">'+(manager?"Los cambios quedan guardados en esta demostración. Solo al publicar estarán visibles para el empleado. Se conserva un registro de quién hizo cada asignación.":u.role==="Supervisor"?"Solo aparecen asignaciones de los equipos que tienes a cargo. No puedes modificar el horario oficial.":"Los horarios y cambios publicados son privados para cada empleado.")+'</div>';
+ return header("Horario semanal",intro,actions)+nav+'<section class="card"><h3>Programación de '+weekLabel()+'</h3>'+body+'</section>'+scheduleHistoryHtml()+'<div class="notice">'+(manager?"Los cambios quedan guardados en esta demostración. Solo al publicar estarán visibles para el empleado. Se conserva un registro de quién hizo cada asignación.":u.role==="Supervisor"?"Solo aparecen asignaciones de los equipos que tienes a cargo. No puedes modificar el horario oficial.":"Los horarios y cambios publicados son privados para cada empleado.")+'</div>';
 }
 function openScheduleForm(){
  pendingType="horario";
