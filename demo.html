@@ -177,7 +177,7 @@ footer{font-size:12px;line-height:1.5}
 <div class="modal" id="modal"><form class="dialog" id="record-form"><h3 id="modal-title">Nuevo registro</h3><div id="fields"></div><div class="actions"><button type="button" class="btn alt" id="cancel">Cancelar</button><button class="btn" type="submit">Guardar en la demostración</button></div></form></div>
 <script>
 const $=id=>document.getElementById(id);
-const modules=[["inicio","⌂","Inicio"],["comunicados","▤","Comunicados oficiales"],["conversaciones","☷","Conversaciones"],["turnos","◷","Horarios"],["equipos","♧","Equipos"],["incidencias","⚑","Incidencias"],["personal","♙","Personal"]];
+const modules=[["inicio","⌂","Inicio"],["comunicados","▤","Comunicados oficiales"],["conversaciones","☷","Conversaciones"],["turnos","◷","Horario semanal"],["equipos","♧","Equipos"],["incidencias","⚑","Incidencias"],["personal","♙","Personal"]];
 const profiles={
  admin:{name:"Prestige",role:"Administración",number:"ADM-000",dept:"Todos los departamentos",depts:["Jardinería","Limpieza"],views:modules.map(x=>x[0])},
  "manager-land":{name:"María González",role:"Gerencia",number:"GER-001",dept:"Jardinería",depts:["Jardinería"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
@@ -223,8 +223,10 @@ try{
  const stored=JSON.parse(localStorage.getItem("prestige-demo-db")||"null");
  db=stored&&typeof stored==="object"?{...cloneSeed(),...stored}:cloneSeed();
  for(const key of Object.keys(seed))if(!Array.isArray(db[key]))db[key]=cloneSeed()[key];
+ if(!Array.isArray(db.horarioSemanal))db.horarioSemanal=[];
 }catch{db=cloneSeed()}
 let active="inicio",pendingType=null;
+let scheduleWeekStart=(()=>{const d=new Date();const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);d.setHours(0,0,0,0);return d})();
 const p=()=>profiles[$("profile").value];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const visible=(item)=>item.dept==="Todos"||p().depts.includes(item.dept);
@@ -247,6 +249,44 @@ function incidentRows(items){
  return items.map(x=>'<article class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+esc(x.title)+'</b><span class="tag gold">'+esc(x.status||"Pendiente")+'</span></div><small>Lugar: '+esc(x.location)+' · '+esc(x.date||"")+' · Reportó: '+esc(x.by)+(x.byNumber?' ('+esc(x.byNumber)+')':'')+(x.reporterRole?' · '+esc(x.reporterRole):'')+'</small><p style="margin:9px 0;font-size:13px">'+esc(x.body)+'</p>'+(x.image?'<img class="announcement-image" src="'+esc(x.image)+'" alt="Fotografía de evidencia de la incidencia" loading="lazy">':'')+(x.reviewNote?'<div class="notice"><b>Seguimiento:</b> '+esc(x.reviewNote)+'<br><small>Revisado por '+esc(x.reviewBy||"Supervisor")+'</small></div>':'')+(!p().role.includes("Empleado") && !x.reviewNote?'<div style="margin-top:10px"><button class="btn alt" data-review="'+x.id+'">Agregar seguimiento</button></div>':'')+'</article>').join("");
 }
 function table(items,cols){if(!items.length)return '<div class="empty">No hay registros disponibles.</div>';return '<div class="tablebox"><table class="table"><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join("")+'</tr></thead><tbody>'+items.map(x=>'<tr>'+cols.map(c=>'<td>'+esc(x[c[0]])+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>'}
+
+function dateKey(d){return d.toISOString().slice(0,10)}
+function weekDays(){return Array.from({length:7},(_,i)=>{const d=new Date(scheduleWeekStart);d.setDate(d.getDate()+i);return d})}
+function weekLabel(){const ds=weekDays();return ds[0].toLocaleDateString("es-US",{day:"numeric",month:"short"})+" – "+ds[6].toLocaleDateString("es-US",{day:"numeric",month:"short",year:"numeric"})}
+function canManageSchedule(){return p().role==="Administración"||p().role==="Gerencia"}
+function scheduleVisible(x){
+ const u=p();
+ if(u.role==="Administración")return true;
+ if(u.role==="Gerencia")return u.depts.includes(x.dept);
+ if(u.role==="Supervisor")return x.supervisorNumber===u.number;
+ return x.employeeNumber===u.number&&x.published===true;
+}
+function renderWeeklySchedule(){
+ const u=p(),days=weekDays(),start=dateKey(days[0]),end=dateKey(days[6]);
+ const records=(db.horarioSemanal||[]).filter(x=>x.date>=start&&x.date<=end&&scheduleVisible(x));
+ const manager=canManageSchedule();
+ const nav='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 16px"><button class="btn alt" data-week="-7">← Semana anterior</button><b>'+weekLabel()+'</b><button class="btn alt" data-week="7">Semana siguiente →</button></div>';
+ const actions=manager?'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn alt" data-copy-week="1">Copiar semana anterior</button><button class="btn" data-new="horario">+ Asignar día</button><button class="btn" data-publish-week="1">Publicar horario</button></div>':"";
+ const intro=manager?"Asigna días de trabajo y descanso, Equipo, supervisor y horas. Publica para que cada empleado vea únicamente su propio horario.":u.role==="Supervisor"?"Consulta los días y turnos de los empleados asignados a tus equipos.":"Aquí puedes consultar únicamente tus días, horas, Equipo y supervisor asignado.";
+ const body=days.map(d=>{
+  const key=dateKey(d),list=records.filter(x=>x.date===key);
+  if(!list.length)return '<div class="row"><span><b>'+d.toLocaleDateString("es-US",{weekday:"long",day:"numeric",month:"short"})+'</b><small>Sin asignación publicada</small></span><span class="tag gold">Sin horario</span></div>';
+  return list.map(x=>'<div class="row"><span><b>'+d.toLocaleDateString("es-US",{weekday:"long",day:"numeric",month:"short"})+' · '+esc(x.employeeName)+'</b><small>'+(x.status==="Descansa"?"Día de descanso":esc(x.startTime||"—")+" a "+esc(x.endTime||"—"))+' · '+esc(x.team||"Sin equipo")+' · Supervisor: '+esc(x.supervisorName||"Sin asignar")+'</small></span><span class="tag '+(x.status==="Descansa"?"gold":"")+'">'+esc(x.status)+(x.published?" · Publicado":" · Borrador")+'</span></div>').join("");
+ }).join("");
+ return header("Horario semanal",intro,actions)+nav+'<section class="card"><h3>Programación de '+weekLabel()+'</h3>'+body+'</section><div class="notice">'+(manager?"Los cambios quedan guardados en esta demostración. Solo al publicar estarán visibles para el empleado. Se conserva un registro de quién hizo cada asignación.":u.role==="Supervisor"?"Solo aparecen asignaciones de los equipos que tienes a cargo. No puedes modificar el horario oficial.":"Los horarios y cambios publicados son privados para cada empleado.")+'</div>';
+}
+function openScheduleForm(){
+ pendingType="horario";
+ const u=p(),dept=u.role==="Administración"?["Jardinería","Limpieza"]:u.depts;
+ const people=db.personal.filter(x=>x.role.includes("Empleado")&&(x.dept==="Ambos"||dept.includes(x.dept)));
+ const teams=db.equipos.filter(x=>dept.includes(x.dept));
+ const supervisors=db.personal.filter(x=>x.role==="Supervisor"&&dept.includes(x.dept));
+ const opts=a=>a.map(x=>'<option value="'+esc(x.number||x.title)+'">'+esc(x.name||x.title)+'</option>').join("");
+ $("modal-title").textContent="Asignar día de trabajo o descanso";
+ $("fields").innerHTML='<div class="field"><label for="f-dept">Departamento</label><select id="f-dept">'+dept.map(x=>'<option>'+esc(x)+'</option>').join("")+'</select></div><div class="field"><label for="f-employee">Empleado</label><select id="f-employee" required>'+opts(people)+'</select></div><div class="field"><label for="f-date">Día</label><input id="f-date" type="date" required value="'+dateKey(scheduleWeekStart)+'"></div><div class="field"><label for="f-status">Asignación</label><select id="f-status"><option>Trabaja</option><option>Descansa</option></select></div><div class="field"><label for="f-team">Equipo</label><select id="f-team"><option value="">Sin asignar</option>'+opts(teams)+'</select></div><div class="field"><label for="f-supervisor">Supervisor</label><select id="f-supervisor"><option value="">Sin asignar</option>'+opts(supervisors)+'</select></div><div class="field"><label for="f-start">Hora de entrada</label><input id="f-start" type="time" value="08:00"></div><div class="field"><label for="f-end">Hora de salida</label><input id="f-end" type="time" value="16:00"></div><p class="hint">Los días de descanso no requieren horas ni Equipo. Los cambios se guardan como borrador hasta publicar.</p>';
+ $("modal").classList.add("show");
+}
+
 function render(){
  const u=p(),dept=u.dept; $("greeting").textContent="Bienvenido, "+u.name;$("subtitle").textContent=u.role+" · "+u.number;$("person-name").textContent=u.name;$("person-role").textContent=u.role+" · "+u.number;$("dept-label").textContent=dept;renderNav();
  const count=k=>db[k].filter(visible).length;
@@ -260,7 +300,7 @@ function render(){
  }else if(active==="conversaciones"){
  html=header("Conversaciones del personal","Haz preguntas, comenta y comparte ideas con tu departamento.",'<button class="btn" data-new="conversaciones">+ Nueva conversación</button>')+'<section class="card"><h3>Conversaciones y colaboración · '+esc(dept)+'</h3>'+conversationRows(db.conversaciones.filter(visible))+'</section><div class="notice">Las conversaciones y sus comentarios son independientes de los comunicados oficiales.</div>';
  }else if(active==="turnos"){
- html=header("Horarios","Horario de trabajo para "+dept+'.',allowed().includes("personal")?'<button class="btn" data-new="turnos">+ Crear horario</button>':"")+'<section class="card"><h3>Horario de trabajo</h3>'+table(db.turnos.filter(visible),[["code","Código"],["title","Servicio o cliente"],["dept","Departamento"],["date","Fecha"],["time","Hora"],["team","Equipo"],["status","Estado"]])+'</section>';
+ html=renderWeeklySchedule();
  }else if(active==="equipos"){
  html=header("Equipos de trabajo","Organización de los equipos por departamento.",allowed().includes("personal")?'<button class="btn" data-new="equipos">+ Crear equipo</button>':"")+'<section class="card"><h3>Equipos asignados</h3>'+rows(db.equipos.filter(visible))+'</section>';
  }else if(active==="incidencias"){
@@ -290,7 +330,7 @@ function openForm(type){
  $("modal").classList.add("show");
 }
 $("record-form").addEventListener("submit",async e=>{
- e.preventDefault();const type=pendingType;const get=id=>$("f-"+id)?.value||"";if(type==="seguimiento"){const item=db.incidencias.find(x=>x.id===Number($("record-form").dataset.reviewId));if(item){item.reviewNote=get("review").trim();item.reviewBy=p().name;item.status=get("status");save()}$("record-form").dataset.reviewId="";$("modal").classList.remove("show");render();return}const dept=get("dept")||p().depts[0];const record={id:Date.now(),dept,title:get("title"),body:get("body"),date:new Date().toLocaleString("es-US"),by:p().name,byNumber:p().number,reporterRole:p().role};
+ e.preventDefault();const type=pendingType;const get=id=>$("f-"+id)?.value||"";if(type==="horario"){const dept=get("dept"),employee=db.personal.find(x=>x.number===get("employee")),team=db.equipos.find(x=>x.title===get("team")),supervisor=db.personal.find(x=>x.number===get("supervisor"));if(!employee){alert("Selecciona un empleado.");return}if(!p().depts.includes(dept)&&p().role!=="Administración"){alert("No tienes permiso para este departamento.");return}const rec={id:Date.now(),dept,employeeNumber:employee.number,employeeName:employee.name,date:get("date"),status:get("status"),team:team?.title||"",supervisorNumber:supervisor?.number||"",supervisorName:supervisor?.name||"",startTime:get("status")==="Descansa"?"":get("start"),endTime:get("status")==="Descansa"?"":get("end"),published:false,createdBy:p().number,createdByName:p().name,updatedAt:new Date().toISOString()};const idx=db.horarioSemanal.findIndex(x=>x.employeeNumber===rec.employeeNumber&&x.date===rec.date);if(idx>=0)db.horarioSemanal[idx]=rec;else db.horarioSemanal.unshift(rec);save();$("modal").classList.remove("show");render();return}if(type==="seguimiento"){const item=db.incidencias.find(x=>x.id===Number($("record-form").dataset.reviewId));if(item){item.reviewNote=get("review").trim();item.reviewBy=p().name;item.status=get("status");save()}$("record-form").dataset.reviewId="";$("modal").classList.remove("show");render();return}const dept=get("dept")||p().depts[0];const record={id:Date.now(),dept,title:get("title"),body:get("body"),date:new Date().toLocaleString("es-US"),by:p().name,byNumber:p().number,reporterRole:p().role};
  if(type==="comunicados"||type==="incidencias"){const file=$("f-image")?.files?.[0];if(type==="incidencias"&&!file){alert("Debes adjuntar una fotografía para registrar la incidencia.");return}if(file){if(!file.type.startsWith("image/")){alert("Selecciona un archivo de imagen válido.");return}if(file.size>8*1024*1024){alert("La imagen debe pesar menos de 8 MB.");return}try{record.image=await optimizeAnnouncementImage(file)}catch{alert("No se pudo procesar la imagen. Intenta con otra.");return}}}
  if(type==="turnos"){record.code="TUR-DEMO-"+String(Date.now()).slice(-5);record.date=get("date");record.time=get("time");record.team=get("team");record.status="Programado"}
  if(type==="incidencias"){record.location=get("location").trim();if(!record.location){alert("Indica el lugar exacto donde ocurrió la incidencia.");return}record.status=p().role.includes("Empleado")?"Pendiente de revisión":"En revisión";}
@@ -311,7 +351,10 @@ document.addEventListener("click",e=>{
  const like=e.target.closest("[data-conv-like]");if(like){const item=db.conversaciones.find(x=>x.id===Number(like.dataset.convLike));if(item){if(!Array.isArray(item.likes))item.likes=[];const who=p().number;item.likes=item.likes.includes(who)?item.likes.filter(v=>v!==who):[...item.likes,who];save();render()}return}
  const openComment=e.target.closest("[data-comment-open]");if(openComment){const form=document.querySelector('[data-comment-form="'+openComment.dataset.commentOpen+'"]');if(form){form.style.display=form.style.display==="none"?"block":"none";if(form.style.display==="block")form.querySelector("textarea").focus()}return}
  const review=e.target.closest("[data-review]");if(review){openIncidentReview(review.dataset.review);return}
- const add=e.target.closest("[data-new]");if(add)openForm(add.dataset.new)
+ const week=e.target.closest("[data-week]");if(week){scheduleWeekStart.setDate(scheduleWeekStart.getDate()+Number(week.dataset.week));render();return}
+ const copy=e.target.closest("[data-copy-week]");if(copy){if(!canManageSchedule())return;const from=new Date(scheduleWeekStart);from.setDate(from.getDate()-7);const a=dateKey(from),b=dateKey(new Date(from.getTime()+6*86400000));const prior=db.horarioSemanal.filter(x=>x.date>=a&&x.date<=b&&p().depts.includes(x.dept));prior.forEach(x=>{const d=new Date(x.date+"T12:00:00");d.setDate(d.getDate()+7);const y={...x,id:Date.now()+Math.random(),date:dateKey(d),published:false,createdBy:p().number,createdByName:p().name,updatedAt:new Date().toISOString()};const i=db.horarioSemanal.findIndex(z=>z.employeeNumber===y.employeeNumber&&z.date===y.date);if(i>=0)db.horarioSemanal[i]=y;else db.horarioSemanal.push(y)});save();render();alert(prior.length?"Se copió la programación anterior como borrador. Revisa y publícala.":"No hay asignaciones en la semana anterior para copiar.");return}
+ const publish=e.target.closest("[data-publish-week]");if(publish){if(!canManageSchedule())return;const a=dateKey(scheduleWeekStart),b=dateKey(weekDays()[6]);let n=0;db.horarioSemanal.forEach(x=>{if(x.date>=a&&x.date<=b&&(p().role==="Administración"||p().depts.includes(x.dept))){x.published=true;x.publishedBy=p().number;x.publishedByName=p().name;x.publishedAt=new Date().toISOString();n++}});save();render();alert(n?"Horario publicado. Los empleados podrán consultar únicamente sus propias asignaciones.":"No hay asignaciones para publicar.");return}
+ const add=e.target.closest("[data-new]");if(add){if(add.dataset.new==="horario")openScheduleForm();else openForm(add.dataset.new)}
 });
 document.addEventListener("submit",e=>{
  const form=e.target.closest("[data-comment-form]");if(!form)return;
