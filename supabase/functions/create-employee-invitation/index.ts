@@ -229,9 +229,33 @@ Deno.serve(async (request: Request) => {
     },
   });
   if (auditError) {
-    await adminClient.from("employee_departments").delete().eq("employee_id", newUserId);
-    await adminClient.from("profiles").delete().eq("id", newUserId);
-    await adminClient.auth.admin.deleteUser(newUserId);
+    // Remove the secondary assignment first. The database prevents deleting a
+    // primary assignment while a secondary assignment still exists.
+    const { error: secondaryCleanupError } = await adminClient
+      .from("employee_departments").delete()
+      .eq("employee_id", newUserId).eq("is_primary", false);
+    const { error: primaryCleanupError } = secondaryCleanupError
+      ? { error: secondaryCleanupError }
+      : await adminClient.from("employee_departments").delete()
+        .eq("employee_id", newUserId).eq("is_primary", true);
+
+    if (secondaryCleanupError || primaryCleanupError) {
+      console.error("Invitation assignment rollback failed.");
+      return response({ error: "No se pudo completar la reversión de la invitación. Contacta a Administración." }, 500, allowedOrigin);
+    }
+
+    const { error: profileCleanupError } = await adminClient.from("profiles").delete().eq("id", newUserId);
+    if (profileCleanupError) {
+      console.error("Invitation profile rollback failed.");
+      return response({ error: "No se pudo completar la reversión del perfil. Contacta a Administración." }, 500, allowedOrigin);
+    }
+
+    const { error: authCleanupError } = await adminClient.auth.admin.deleteUser(newUserId);
+    if (authCleanupError) {
+      console.error("Invitation auth rollback failed.");
+      return response({ error: "No se pudo completar la reversión de la cuenta. Contacta a Administración." }, 500, allowedOrigin);
+    }
+
     return response({ error: "No se pudo registrar la auditoría; la invitación se revirtió." }, 500, allowedOrigin);
   }
 
