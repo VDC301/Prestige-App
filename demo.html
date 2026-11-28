@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#173d32">
+<link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
 <link rel="shortcut icon" type="image/svg+xml" href="./assets/icon.svg">
 <link rel="apple-touch-icon" href="./assets/icon.svg"><title>Prestige | Demostración interactiva</title>
@@ -165,6 +166,7 @@ footer{font-size:12px;line-height:1.5}
 </style>
 </head>
 <body>
+<div id="update-banner" role="status" aria-live="polite" style="display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:20;background:#173d32;color:#fff;padding:14px 16px;border-radius:12px;box-shadow:0 8px 28px #0003;align-items:center;justify-content:space-between;gap:12px;font:600 14px/1.4 system-ui"><span>Hay una nueva versión de Prestige disponible.</span><button id="apply-update" type="button" style="border:0;border-radius:8px;padding:10px 13px;background:#f3f2ea;color:#173d32;font-weight:750;white-space:nowrap">Actualizar</button></div>
 <header class="top"><div class="brand-lockup"><img class="brand-logo" src="https://static.wixstatic.com/media/ed3d67_322c2e952aa74fa39f0e2e52d5ac2a7e~mv2.png/v1/fill/w_519,h_390,al_c,q_85,enc_avif,quality_auto/prestige_landscaping_and_cleaning_logo.png" alt="Logotipo oficial de Prestige Landscaping &amp; Cleaning" decoding="async"><div class="brand-copy"><span class="brand-name">PRESTIGE</span><small>LANDSCAPING &amp; CLEANING</small></div></div><span class="demo">MODO DEMOSTRACIÓN · DATOS FICTICIOS</span></header>
 <div class="wrap">
 <section class="hero"><div><div class="eyebrow">PORTAL INTERNO · VISTA PREVIA</div><h1 id="greeting">Bienvenido a Prestige</h1><div class="sub" id="subtitle">Operaciones y comunicación del equipo, en un solo lugar.</div></div>
@@ -321,4 +323,40 @@ document.addEventListener("submit",e=>{
 $("profile").addEventListener("change",()=>{active="inicio";render()});
 render();
 </script><!-- Publicación de la corrección de renderizado -->
+<script>
+/* PRESTIGE_PWA_UPDATE */
+if ("serviceWorker" in navigator) {
+  let refreshing = false;
+  const banner = document.getElementById("update-banner");
+  const apply = document.getElementById("apply-update");
+  const showUpdate = registration => {
+    if (registration.waiting && navigator.serviceWorker.controller) banner.style.display = "flex";
+  };
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!refreshing) { refreshing = true; window.location.reload(); }
+  });
+  window.addEventListener("load", async () => {
+    try {
+      const registration = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+      showUpdate(registration);
+      registration.addEventListener("updatefound", () => {
+        const installing = registration.installing;
+        if (!installing) return;
+        installing.addEventListener("statechange", () => {
+          if (installing.state === "installed") showUpdate(registration);
+        });
+      });
+      await registration.update();
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") registration.update().catch(() => {});
+      });
+      apply.addEventListener("click", () => {
+        if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
+      });
+    } catch (error) {
+      console.warn("No se pudo activar la actualización automática de Prestige.", error);
+    }
+  });
+}
+</script>
 </body></html>
