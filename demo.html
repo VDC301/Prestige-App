@@ -167,54 +167,54 @@ footer{font-size:12px;line-height:1.5}
 </head>
 <body>
 <div id="update-banner" role="status" aria-live="polite" style="display:none;position:fixed;left:12px;right:12px;bottom:12px;z-index:20;background:#173d32;color:#fff;padding:14px 16px;border-radius:12px;box-shadow:0 8px 28px #0003;align-items:center;justify-content:space-between;gap:12px;font:600 14px/1.4 system-ui"><span>Hay una nueva versión de Prestige disponible.</span><button id="apply-update" type="button" style="border:0;border-radius:8px;padding:10px 13px;background:#f3f2ea;color:#173d32;font-weight:750;white-space:nowrap">Actualizar</button></div>
-<header class="top"><div class="brand-lockup"><img class="brand-logo" src="https://static.wixstatic.com/media/ed3d67_322c2e952aa74fa39f0e2e52d5ac2a7e~mv2.png/v1/fill/w_519,h_390,al_c,q_85,enc_avif,quality_auto/prestige_landscaping_and_cleaning_logo.png" alt="Logotipo oficial de Prestige Landscaping &amp; Cleaning" decoding="async"><div class="brand-copy"><span class="brand-name">PRESTIGE</span><small>LANDSCAPING &amp; CLEANING</small></div></div><span class="demo">MODO DEMOSTRACIÓN · DATOS FICTICIOS</span></header>
+<header class="top"><div class="brand-lockup"><img class="brand-logo" src="https://static.wixstatic.com/media/ed3d67_322c2e952aa74fa39f0e2e52d5ac2a7e~mv2.png/v1/fill/w_519,h_390,al_c,q_85,enc_avif,quality_auto/prestige_landscaping_and_cleaning_logo.png" alt="Logotipo oficial de Prestige Jardinería y Limpieza" decoding="async"><div class="brand-copy"><span class="brand-name">PRESTIGE</span><small>JARDINERÍA Y LIMPIEZA</small></div></div><span class="demo">MODO DE DEMOSTRACIÓN · DATOS DE EJEMPLO</span></header>
 <div class="wrap">
-<section class="hero"><div><div class="eyebrow">PORTAL INTERNO · VISTA PREVIA</div><h1 id="greeting">Bienvenido a Prestige</h1><div class="sub" id="subtitle">Operaciones y comunicación del equipo, en un solo lugar.</div></div>
-<div class="profile"><label for="profile">Ver como:</label><select id="profile"><option value="admin">Administración · ADM-000</option><option value="manager-land">Gerencia · Landscaping</option><option value="manager-clean">Gerencia · Cleaning</option><option value="super-land">Supervisor · Landscaping</option><option value="super-clean">Supervisor · Cleaning</option><option value="employee-land">Empleado · Landscaping</option><option value="employee-clean">Empleado · Cleaning</option><option value="employee-both">Empleado autorizado · Ambos</option></select></div></section>
-<div class="layout"><aside class="side"><div class="person"><b id="person-name">Prestige</b><small id="person-role">Administración · ADM-000</small></div><nav class="nav" id="nav"></nav><div class="sidefoot">DEPARTAMENTO ACTIVO<br><b id="dept-label">Todos los departamentos</b></div></aside><main class="main" id="view" aria-live="polite"></main></div>
-<div class="notice"><b>Importante:</b> esta demostración guarda los cambios únicamente en este navegador. No crea cuentas, no envía correos y no modifica la base de datos real de Prestige.</div>
-</div><footer>PRESTIGE LANDSCAPING &amp; CLEANING · DEMOSTRACIÓN INTERACTIVA</footer>
-<div class="modal" id="modal"><form class="dialog" id="record-form"><h3 id="modal-title">Nuevo registro</h3><div id="fields"></div><div class="actions"><button type="button" class="btn alt" id="cancel">Cancelar</button><button class="btn" type="submit">Guardar en demostración</button></div></form></div>
+<section class="hero"><div><div class="eyebrow">PORTAL INTERNO · VISTA PREVIA</div><h1 id="greeting">Bienvenido a Prestige</h1><div class="sub" id="subtitle">Operaciones y comunicación del equipo en un solo lugar.</div></div>
+<div class="profile"><label for="profile">Vista de perfil:</label><select id="profile"><option value="admin">Administración · ADM-000</option><option value="manager-land">Gerencia · Jardinería</option><option value="manager-clean">Gerencia · Limpieza</option><option value="super-land">Supervisor · Jardinería</option><option value="super-clean">Supervisor · Limpieza</option><option value="employee-land">Empleado · Jardinería</option><option value="employee-clean">Empleado · Limpieza</option><option value="employee-both">Empleado autorizado · Ambos</option></select></div></section>
+<div class="layout"><aside class="side"><div class="person"><b id="person-name">Prestige</b><small id="person-role">Administración · ADM-000</small></div><nav class="nav" id="nav"></nav><div class="sidefoot">DEPARTAMENTO ACTUAL<br><b id="dept-label">Todos los departamentos</b></div></aside><main class="main" id="view" aria-live="polite"></main></div>
+<div class="notice"><b>Importante:</b> esta demostración guarda los cambios únicamente en este navegador. No crea cuentas, no envía correos electrónicos ni modifica la base de datos real de Prestige.</div>
+</div><footer>PRESTIGE JARDINERÍA Y LIMPIEZA · DEMOSTRACIÓN INTERACTIVA</footer>
+<div class="modal" id="modal"><form class="dialog" id="record-form"><h3 id="modal-title">Nuevo registro</h3><div id="fields"></div><div class="actions"><button type="button" class="btn alt" id="cancel">Cancelar</button><button class="btn" type="submit">Guardar en la demostración</button></div></form></div>
 <script>
 const $=id=>document.getElementById(id);
-const modules=[["inicio","⌂","Inicio"],["comunicados","▤","Comunicados oficiales"],["conversaciones","☷","Conversaciones"],["turnos","◷","Turnos y horarios"],["equipos","♧","Equipos"],["incidencias","⚑","Incidencias"],["personal","♙","Personal"]];
+const modules=[["inicio","⌂","Inicio"],["comunicados","▤","Comunicados oficiales"],["conversaciones","☷","Conversaciones"],["turnos","◷","Horarios"],["equipos","♧","Equipos"],["incidencias","⚑","Incidencias"],["personal","♙","Personal"]];
 const profiles={
- admin:{name:"Prestige",role:"Administración",number:"ADM-000",dept:"Todos los departamentos",depts:["Landscaping","Cleaning"],views:modules.map(x=>x[0])},
- "manager-land":{name:"María González",role:"Gerencia",number:"GER-001",dept:"Landscaping",depts:["Landscaping"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
- "manager-clean":{name:"Carlos Rivera",role:"Gerencia",number:"GER-002",dept:"Cleaning",depts:["Cleaning"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
- "super-land":{name:"José Martínez",role:"Supervisor",number:"SUP-001",dept:"Landscaping",depts:["Landscaping"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
- "super-clean":{name:"Ana López",role:"Supervisor",number:"SUP-002",dept:"Cleaning",depts:["Cleaning"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
- "employee-land":{name:"Luis Pérez",role:"Empleado",number:"EMP-001",dept:"Landscaping",depts:["Landscaping"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
- "employee-clean":{name:"Sofía Torres",role:"Empleado",number:"EMP-002",dept:"Cleaning",depts:["Cleaning"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
- "employee-both":{name:"Miguel Díaz",role:"Empleado autorizado",number:"EMP-003",dept:"Landscaping + Cleaning",depts:["Landscaping","Cleaning"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]}
+ admin:{name:"Prestige",role:"Administración",number:"ADM-000",dept:"Todos los departamentos",depts:["Jardinería","Limpieza"],views:modules.map(x=>x[0])},
+ "manager-land":{name:"María González",role:"Gerencia",number:"GER-001",dept:"Jardinería",depts:["Jardinería"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "manager-clean":{name:"Carlos Rivera",role:"Gerencia",number:"GER-002",dept:"Limpieza",depts:["Limpieza"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "super-land":{name:"José Martínez",role:"Supervisor",number:"SUP-001",dept:"Jardinería",depts:["Jardinería"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "super-clean":{name:"Ana López",role:"Supervisor",number:"SUP-002",dept:"Limpieza",depts:["Limpieza"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "employee-land":{name:"Luis Pérez",role:"Empleado",number:"EMP-001",dept:"Jardinería",depts:["Jardinería"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "employee-clean":{name:"Sofía Torres",role:"Empleado",number:"EMP-002",dept:"Limpieza",depts:["Limpieza"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]},
+ "employee-both":{name:"Miguel Díaz",role:"Empleado autorizado",number:"EMP-003",dept:"Jardinería + Limpieza",depts:["Jardinería","Limpieza"],views:["inicio","comunicados","conversaciones","turnos","equipos","incidencias"]}
 };
 const seed={
  comunicados:[
  {id:1,dept:"Todos",title:"Bienvenidos al portal Prestige",body:"Usaremos este espacio para avisos oficiales, políticas y novedades importantes.",date:"Hoy",by:"Administración"},
- {id:2,dept:"Landscaping",title:"Preparación de equipos",body:"Revisar herramientas y equipo antes de salir a los servicios.",date:"Hoy",by:"Administración"},
- {id:3,dept:"Cleaning",title:"Lista de suministros",body:"Confirmar los suministros necesarios antes del primer servicio.",date:"Ayer",by:"Administración"}],
+ {id:2,dept:"Jardinería",title:"Preparación de equipos",body:"Revisar herramientas y equipo antes de salir a los servicios.",date:"Hoy",by:"Administración"},
+ {id:3,dept:"Limpieza",title:"Lista de suministros",body:"Confirmar los suministros necesarios antes del primer servicio.",date:"Ayer",by:"Administración"}],
  conversaciones:[
- {id:1,dept:"Landscaping",title:"Rutas de esta semana",body:"¿Alguien tiene sugerencias para organizar mejor las rutas?",date:"Hoy",by:"José Martínez"},
- {id:2,dept:"Cleaning",title:"Productos para superficies",body:"Compartamos recomendaciones y experiencias del equipo.",date:"Ayer",by:"Ana López"}],
+ {id:1,dept:"Jardinería",title:"Rutas de esta semana",body:"¿Alguien tiene sugerencias para organizar mejor las rutas?",date:"Hoy",by:"José Martínez"},
+ {id:2,dept:"Limpieza",title:"Productos para superficies",body:"Compartamos recomendaciones y experiencias del equipo.",date:"Ayer",by:"Ana López"}],
  turnos:[
- {id:1,code:"TUR-2026-001",dept:"Landscaping",title:"Residencia Green",date:"2026-11-25",time:"08:00",team:"Equipo Norte",status:"Programado"},
- {id:2,code:"TUR-2026-002",dept:"Cleaning",title:"Oficinas Central",date:"2026-11-25",time:"09:00",team:"Equipo Limpieza A",status:"Programado"},
- {id:3,code:"TUR-2026-003",dept:"Landscaping",title:"Complejo Oak",date:"2026-11-26",time:"07:30",team:"Equipo Sur",status:"Programado"}],
+ {id:1,code:"TUR-2026-001",dept:"Jardinería",title:"Residencia Green",date:"2026-11-25",time:"08:00",team:"Equipo Norte",status:"Programado"},
+ {id:2,code:"TUR-2026-002",dept:"Limpieza",title:"Oficinas Central",date:"2026-11-25",time:"09:00",team:"Equipo Limpieza A",status:"Programado"},
+ {id:3,code:"TUR-2026-003",dept:"Jardinería",title:"Complejo Oak",date:"2026-11-26",time:"07:30",team:"Equipo Sur",status:"Programado"}],
  equipos:[
- {id:1,dept:"Landscaping",title:"Equipo Norte",body:"Supervisor: José Martínez · 4 integrantes"},
- {id:2,dept:"Landscaping",title:"Equipo Sur",body:"Supervisor: Roberto Cruz · 3 integrantes"},
- {id:3,dept:"Cleaning",title:"Equipo Limpieza A",body:"Supervisora: Ana López · 3 integrantes"}],
+ {id:1,dept:"Jardinería",title:"Equipo Norte",body:"Supervisor: José Martínez · 4 integrantes"},
+ {id:2,dept:"Jardinería",title:"Equipo Sur",body:"Supervisor: Roberto Cruz · 3 integrantes"},
+ {id:3,dept:"Limpieza",title:"Equipo Limpieza A",body:"Supervisora: Ana López · 3 integrantes"}],
  incidencias:[
- {id:1,dept:"Landscaping",title:"Herramienta faltante",body:"Se reportó la ausencia de una podadora al finalizar el servicio.",date:"Hoy",status:"En revisión",by:"José Martínez"},
- {id:2,dept:"Cleaning",title:"Daño en propiedad",body:"Se documentó una marca accidental en una pared. Se notificó a Gerencia.",date:"Ayer",status:"Cerrada",by:"Ana López"}],
+ {id:1,dept:"Jardinería",title:"Herramienta faltante",body:"Se reportó la ausencia de una podadora al finalizar el servicio.",date:"Hoy",status:"En revisión",by:"José Martínez"},
+ {id:2,dept:"Limpieza",title:"Daño en propiedad",body:"Se documentó una marca accidental en una pared. Se notificó a Gerencia.",date:"Ayer",status:"Cerrada",by:"Ana López"}],
  personal:[
  {id:1,number:"ADM-000",name:"Prestige",role:"Administración",dept:"Todos",status:"Activo"},
- {id:2,number:"GER-001",name:"María González",role:"Gerencia",dept:"Landscaping",status:"Activo"},
- {id:3,number:"GER-002",name:"Carlos Rivera",role:"Gerencia",dept:"Cleaning",status:"Activo"},
- {id:4,number:"SUP-001",name:"José Martínez",role:"Supervisor",dept:"Landscaping",status:"Activo"},
- {id:5,number:"SUP-002",name:"Ana López",role:"Supervisor",dept:"Cleaning",status:"Activo"},
- {id:6,number:"EMP-001",name:"Luis Pérez",role:"Empleado",dept:"Landscaping",status:"Activo"},
- {id:7,number:"EMP-002",name:"Sofía Torres",role:"Empleado",dept:"Cleaning",status:"Activo"},
+ {id:2,number:"GER-001",name:"María González",role:"Gerencia",dept:"Jardinería",status:"Activo"},
+ {id:3,number:"GER-002",name:"Carlos Rivera",role:"Gerencia",dept:"Limpieza",status:"Activo"},
+ {id:4,number:"SUP-001",name:"José Martínez",role:"Supervisor",dept:"Jardinería",status:"Activo"},
+ {id:5,number:"SUP-002",name:"Ana López",role:"Supervisor",dept:"Limpieza",status:"Activo"},
+ {id:6,number:"EMP-001",name:"Luis Pérez",role:"Empleado",dept:"Jardinería",status:"Activo"},
+ {id:7,number:"EMP-002",name:"Sofía Torres",role:"Empleado",dept:"Limpieza",status:"Activo"},
  {id:8,number:"EMP-003",name:"Miguel Díaz",role:"Empleado autorizado",dept:"Ambos",status:"Activo"}]
 };
 const cloneSeed=()=>JSON.parse(JSON.stringify(seed));
@@ -244,7 +244,7 @@ function conversationRows(items){
 }
 function incidentRows(items){
  if(!items.length)return '<div class="empty">Todavía no hay incidencias registradas.</div>';
- return items.map(x=>'<article class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+esc(x.title)+'</b><span class="tag gold">'+esc(x.status||"Pendiente")+'</span></div><small>Lugar: '+esc(x.location)+' · '+esc(x.date||"")+' · Reportó: '+esc(x.by)+(x.byNumber?' ('+esc(x.byNumber)+')':'')+(x.reporterRole?' · '+esc(x.reporterRole):'')+'</small><p style="margin:9px 0;font-size:13px">'+esc(x.body)+'</p>'+(x.image?'<img class="announcement-image" src="'+esc(x.image)+'" alt="Evidencia fotográfica de la incidencia" loading="lazy">':'')+(x.reviewNote?'<div class="notice"><b>Seguimiento:</b> '+esc(x.reviewNote)+'<br><small>Revisado por '+esc(x.reviewBy||"Supervisor")+'</small></div>':'')+(!p().role.includes("Empleado") && !x.reviewNote?'<div style="margin-top:10px"><button class="btn alt" data-review="'+x.id+'">Agregar seguimiento</button></div>':'')+'</article>').join("");
+ return items.map(x=>'<article class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+esc(x.title)+'</b><span class="tag gold">'+esc(x.status||"Pendiente")+'</span></div><small>Lugar: '+esc(x.location)+' · '+esc(x.date||"")+' · Reportó: '+esc(x.by)+(x.byNumber?' ('+esc(x.byNumber)+')':'')+(x.reporterRole?' · '+esc(x.reporterRole):'')+'</small><p style="margin:9px 0;font-size:13px">'+esc(x.body)+'</p>'+(x.image?'<img class="announcement-image" src="'+esc(x.image)+'" alt="Fotografía de evidencia de la incidencia" loading="lazy">':'')+(x.reviewNote?'<div class="notice"><b>Seguimiento:</b> '+esc(x.reviewNote)+'<br><small>Revisado por '+esc(x.reviewBy||"Supervisor")+'</small></div>':'')+(!p().role.includes("Empleado") && !x.reviewNote?'<div style="margin-top:10px"><button class="btn alt" data-review="'+x.id+'">Agregar seguimiento</button></div>':'')+'</article>').join("");
 }
 function table(items,cols){if(!items.length)return '<div class="empty">No hay registros disponibles.</div>';return '<div class="tablebox"><table class="table"><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join("")+'</tr></thead><tbody>'+items.map(x=>'<tr>'+cols.map(c=>'<td>'+esc(x[c[0]])+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>'}
 function render(){
@@ -253,20 +253,20 @@ function render(){
  let html="";
  if(active==="inicio"){
  html=header("Resumen de actividad","Información correspondiente a "+dept+".")+
- '<div class="stats"><div class="card stat"><small>Turnos programados</small><strong>'+count("turnos")+'</strong><span>En los departamentos asignados</span></div><div class="card stat"><small>Incidencias registradas</small><strong>'+count("incidencias")+'</strong><span>Con historial conservado</span></div><div class="card stat"><small>Conversaciones</small><strong>'+count("conversaciones")+'</strong><span>Participación del personal</span></div></div>'+
- '<div class="grid"><section class="card"><h3>Actividad reciente</h3>'+rows([...db.incidencias.filter(visible).slice(0,2),...db.comunicados.filter(visible).slice(0,1)],"")+'</section><section class="card"><h3>Accesos rápidos</h3>'+modules.filter(m=>allowed().includes(m[0])&&m[0]!=="inicio").map(m=>'<div class="row"><b>'+m[2]+'</b><button class="btn alt" data-page="'+m[0]+'">Abrir</button></div>').join("")+'</section></div>';
+ '<div class="stats"><div class="card stat"><small>Horarios programados</small><strong>'+count("turnos")+'</strong><span>En los departamentos asignados</span></div><div class="card stat"><small>Incidencias registradas</small><strong>'+count("incidencias")+'</strong><span>Con historial guardado</span></div><div class="card stat"><small>Conversaciones</small><strong>'+count("conversaciones")+'</strong><span>Participación del personal</span></div></div>'+
+ '<div class="grid"><section class="card"><h3>Actividad reciente</h3>'+rows([...db.incidencias.filter(visible).slice(0,2),...db.comunicados.filter(visible).slice(0,1)],"")+'</section><section class="card"><h3>Accesos directos</h3>'+modules.filter(m=>allowed().includes(m[0])&&m[0]!=="inicio").map(m=>'<div class="row"><b>'+m[2]+'</b><button class="btn alt" data-page="'+m[0]+'">Ver</button></div>').join("")+'</section></div>';
  }else if(active==="comunicados"){
- html=header("Comunicados oficiales","Avisos formales publicados por Administración y Gerencia.",["Administración","Gerencia"].includes(u.role)?'<button class="btn" data-new="comunicados">+ Publicar comunicado</button>':"")+'<section class="card"><h3>Tablón oficial</h3>'+rows(db.comunicados.filter(visible))+'</section><div class="notice">Este módulo es independiente de Conversaciones. Solo Administración publica comunicados oficiales.</div>';
+ html=header("Comunicados oficiales","Avisos oficiales publicados por Administración y Gerencia.",["Administración","Gerencia"].includes(u.role)?'<button class="btn" data-new="comunicados">+ Publicar comunicado</button>':"")+'<section class="card"><h3>Panel de comunicados</h3>'+rows(db.comunicados.filter(visible))+'</section><div class="notice">Este módulo es independiente de Conversaciones. Administración y Gerencia pueden publicar comunicados oficiales.</div>';
  }else if(active==="conversaciones"){
- html=header("Conversaciones del personal","Haz preguntas, comenta y apoya las ideas de tu departamento.",'<button class="btn" data-new="conversaciones">+ Nueva conversación</button>')+'<section class="card"><h3>Debates y colaboración · '+esc(dept)+'</h3>'+conversationRows(db.conversaciones.filter(visible))+'</section><div class="notice">Las conversaciones y sus comentarios son independientes de los comunicados oficiales.</div>';
+ html=header("Conversaciones del personal","Haz preguntas, comenta y comparte ideas con tu departamento.",'<button class="btn" data-new="conversaciones">+ Nueva conversación</button>')+'<section class="card"><h3>Conversaciones y colaboración · '+esc(dept)+'</h3>'+conversationRows(db.conversaciones.filter(visible))+'</section><div class="notice">Las conversaciones y sus comentarios son independientes de los comunicados oficiales.</div>';
  }else if(active==="turnos"){
- html=header("Turnos y horarios","Programación con identificador único para "+dept+'.',allowed().includes("personal")?'<button class="btn" data-new="turnos">+ Crear turno</button>':"")+'<section class="card"><h3>Programación</h3>'+table(db.turnos.filter(visible),[["code","Identificador"],["title","Servicio"],["dept","Departamento"],["date","Fecha"],["time","Hora"],["team","Equipo"],["status","Estado"]])+'</section>';
+ html=header("Horarios","Horario de trabajo para "+dept+'.',allowed().includes("personal")?'<button class="btn" data-new="turnos">+ Crear horario</button>':"")+'<section class="card"><h3>Horario de trabajo</h3>'+table(db.turnos.filter(visible),[["code","Código"],["title","Servicio o cliente"],["dept","Departamento"],["date","Fecha"],["time","Hora"],["team","Equipo"],["status","Estado"]])+'</section>';
  }else if(active==="equipos"){
  html=header("Equipos de trabajo","Organización de los equipos por departamento.",allowed().includes("personal")?'<button class="btn" data-new="equipos">+ Crear equipo</button>':"")+'<section class="card"><h3>Equipos asignados</h3>'+rows(db.equipos.filter(visible))+'</section>';
  }else if(active==="incidencias"){
- html=header("Incidencias","Reportes con fotografía obligatoria y ubicación del incidente.",'<button class="btn" data-new="incidencias">+ Registrar incidencia</button>')+'<section class="card"><h3>Historial de incidencias</h3>'+incidentRows(db.incidencias.filter(visible))+'</section><div class="notice">Los reportes creados por empleados quedan identificados para que el supervisor pueda revisarlos y agregar seguimiento. En esta demostración, las notificaciones a Gerencia y Administración son simuladas.</div>';
+ html=header("Incidencias","Reportes con fotografía obligatoria y ubicación del incidente.",'<button class="btn" data-new="incidencias">+ Registrar incidencia</button>')+'<section class="card"><h3>Historial de incidencias</h3>'+incidentRows(db.incidencias.filter(visible))+'</section><div class="notice">Los reportes creados por empleados quedan identificados para que el supervisor pueda revisarlos y agregar seguimiento. En esta demostración, los avisos a Gerencia y Administración son simulados.</div>';
  }else if(active==="personal"){
- html=header("Administración de personal","Vista general de roles y departamentos.")+'<section class="card"><h3>Directorio de demostración</h3>'+table(db.personal,[["number","Número"],["name","Nombre"],["role","Rol"],["dept","Departamento"],["status","Estado"]])+'</section><div class="notice">En el portal real, Administración gestionará invitaciones y permisos. Aquí no se envían invitaciones.</div>';
+ html=header("Administración de personal","Vista general de funciones y departamentos.")+'<section class="card"><h3>Directorio de ejemplo</h3>'+table(db.personal,[["number","Número"],["name","Nombre"],["role","Rol"],["dept","Departamento"],["status","Estado"]])+'</section><div class="notice">En el portal real, Administración gestionará invitaciones y permisos. Aquí no se envían invitaciones.</div>';
  }
  $("view").innerHTML=html;
 }
@@ -274,19 +274,19 @@ function openForm(type){
  pendingType=type;const fields={
  comunicados:[["title","Título","text"],["body","Contenido","textarea"],["image","Imagen (opcional)","file"],["dept","Departamento","select"]],
  conversaciones:[["title","Tema","text"],["body","Mensaje inicial","textarea"]],
- turnos:[["title","Servicio o cliente","text"],["date","Fecha","date"],["time","Hora","time"],["team","Equipo asignado","text"],["dept","Departamento","select"]],
+ turnos:[["title","Servicio o cliente o cliente","text"],["date","Fecha","date"],["time","Hora","time"],["team","Equipo asignado","text"],["dept","Departamento","select"]],
  equipos:[["title","Nombre del equipo","text"],["body","Supervisor e integrantes","text"],["dept","Departamento","select"]],
- incidencias:[["title","Tipo o título de incidencia","text"],["location","Lugar exacto (dirección, propiedad o área de trabajo)","text"],["body","Descripción detallada","textarea"],["image","Fotografía obligatoria","file"],["dept","Departamento","select"]]
+ incidencias:[["title","Tipo o título de la incidencia","text"],["location","Lugar exacto (dirección, propiedad o área de trabajo)","text"],["body","Descripción detallada","textarea"],["image","Fotografía obligatoria","file"],["dept","Departamento","select"]]
  }[type];
- $("modal-title").textContent=({comunicados:"Publicar comunicado oficial",conversaciones:"Iniciar conversación",turnos:"Crear turno",equipos:"Crear equipo",incidencias:"Registrar incidencia"})[type];
+ $("modal-title").textContent=({comunicados:"Publicar comunicado oficial",conversaciones:"Iniciar conversación",turnos:"Crear horario",equipos:"Crear equipo",incidencias:"Registrar incidencia"})[type];
  $("fields").innerHTML=fields.map(([id,label,kind])=>{
   let control="";
   if(kind==="textarea")control='<textarea id="f-'+id+'" required></textarea>';
-  else if(kind==="file")control='<input id="f-'+id+'" type="file" accept="image/*" '+(type==="incidencias"?"required":"")+'><small class="hint">'+(type==="incidencias"?"Obligatoria. Adjunta una fotografía clara como evidencia (máximo 8 MB).":"Opcional. Se optimizará para que el comunicado cargue más rápido.")+'</small>';
-  else if(kind==="select")control='<select id="f-'+id+'">'+(type==="comunicados"?(p().role==="Administración"?["Todos","Landscaping","Cleaning"]:p().depts):p().depts).map(v=>'<option>'+esc(v)+'</option>').join("")+'</select>';
+  else if(kind==="file")control='<input id="f-'+id+'" type="file" accept="image/*" '+(type==="incidencias"?"required":"")+'><small class="hint">'+(type==="incidencias"?"Obligatoria. Adjunta una fotografía clara como evidencia (máximo 8 MB).":"Opcional. La imagen se optimizará para que el comunicado cargue más rápido.")+'</small>';
+  else if(kind==="select")control='<select id="f-'+id+'">'+(type==="comunicados"?(p().role==="Administración"?["Todos","Jardinería","Limpieza"]:p().depts):p().depts).map(v=>'<option>'+esc(v)+'</option>').join("")+'</select>';
   else control='<input id="f-'+id+'" type="'+kind+'" required '+(id==="date"?'value="2026-11-28"':"")+'>';
   return '<div class="field"><label for="f-'+id+'">'+label+'</label>'+control+'</div>';
- }).join("")+'<p class="hint">Los datos se guardan solo en este navegador.</p>';
+ }).join("")+'<p class="hint">Los datos se guardan únicamente en este navegador.</p>';
  $("modal").classList.add("show");
 }
 $("record-form").addEventListener("submit",async e=>{
@@ -300,7 +300,7 @@ $("record-form").addEventListener("submit",async e=>{
 function openIncidentReview(id){
  const item=db.incidencias.find(x=>x.id===Number(id));if(!item)return;
  pendingType="seguimiento";$("modal-title").textContent="Seguimiento de incidencia";
- $("fields").innerHTML='<p class="hint">Incidencia: <b>'+esc(item.title)+'</b> · '+esc(item.location)+'</p><div class="field"><label for="f-review">Observaciones del supervisor o gerencia</label><textarea id="f-review" required placeholder="Escribe la revisión, acciones tomadas o próximos pasos."></textarea></div><div class="field"><label for="f-status">Estado</label><select id="f-status"><option>En revisión</option><option>En seguimiento</option><option>Resuelta</option></select></div>';
+ $("fields").innerHTML='<p class="hint">Incidencia: <b>'+esc(item.title)+'</b> · '+esc(item.location)+'</p><div class="field"><label for="f-review">Observaciones del supervisor o de Gerencia</label><textarea id="f-review" required placeholder="Escribe la revisión, las acciones tomadas o los próximos pasos."></textarea></div><div class="field"><label for="f-status">Estado</label><select id="f-status"><option>En revisión</option><option>En seguimiento</option><option>Resuelta</option></select></div>';
  $("record-form").dataset.reviewId=String(item.id);$("modal").classList.add("show");
 }
 function optimizeAnnouncementImage(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{const scale=Math.min(1,1400/Math.max(img.width,img.height)),canvas=document.createElement("canvas");canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,canvas.width,canvas.height);URL.revokeObjectURL(url);resolve(canvas.toDataURL("image/jpeg",.78))};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Imagen inválida"))};img.src=url})}
