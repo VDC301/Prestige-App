@@ -231,6 +231,15 @@ function allowed(){return p().views}
 function renderNav(){$("nav").innerHTML=modules.filter(m=>allowed().includes(m[0])).map(m=>'<button class="'+(active===m[0]?"active":"")+'" data-page="'+m[0]+'">'+m[1]+' &nbsp;'+m[2]+'</button>').join("");}
 function header(title,desc,action=""){return '<div class="head"><div><h2>'+title+'</h2><p>'+desc+'</p></div>'+action+'</div>'}
 function rows(items,kind){if(!items.length)return '<div class="empty">Todavía no hay registros para mostrar.</div>';return items.map(x=>'<div class="row"><span><b>'+esc(x.title||x.name)+'</b><small>'+esc(x.body||x.number||"")+(x.date?" · "+esc(x.date):"")+'</small>'+(x.image?'<img class="announcement-image" src="'+esc(x.image)+'" alt="Imagen adjunta al comunicado" loading="lazy">':"")+'</span><span class="tag '+(x.status==="Cerrada"?"":"gold")+'">'+esc(x.status||x.dept||"")+(x.by?' · '+esc(x.by):"")+'</span></div>').join("")}
+function conversationRows(items){
+ if(!items.length)return '<div class="empty">Todavía no hay conversaciones en este departamento. ¡Inicia la primera!</div>';
+ return items.map(x=>{
+  const likes=Array.isArray(x.likes)?x.likes:[];
+  const comments=Array.isArray(x.comments)?x.comments:[];
+  const liked=likes.includes(p().number);
+  return '<article class="card" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><h3 style="margin:0 0 5px">'+esc(x.title)+'</h3><small>'+esc(x.by||"Miembro del equipo")+' · '+esc(x.date||"")+' · '+esc(x.dept)+'</small></div><span class="tag">'+esc(x.dept)+'</span></div><p style="margin:12px 0">'+esc(x.body)+'</p><div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap"><button type="button" class="btn alt" data-conv-like="'+x.id+'" aria-pressed="'+liked+'">'+(liked?'♥':'♡')+' Me gusta · '+likes.length+'</button><button type="button" class="btn alt" data-comment-open="'+x.id+'">Comentar · '+comments.length+'</button></div><div style="margin-top:13px">'+(comments.length?comments.map(c=>'<div class="row" style="margin:7px 0"><div><b>'+esc(c.by)+'</b><small>'+esc(c.date||"")+'</small><p style="margin:7px 0 0">'+esc(c.body)+'</p></div></div>').join(""):'<small class="hint">Todavía no hay comentarios. ¡Sé el primero en participar!</small>')+'</div><form data-comment-form="'+x.id+'" style="display:none;margin-top:12px"><div class="field"><label for="comment-'+x.id+'">Tu comentario</label><textarea id="comment-'+x.id+'" required placeholder="Escribe tu respuesta a esta conversación..."></textarea></div><button type="submit" class="btn">Publicar comentario</button></form></article>';
+ }).join("");
+}
 function incidentRows(items){
  if(!items.length)return '<div class="empty">Todavía no hay incidencias registradas.</div>';
  return items.map(x=>'<article class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><b>'+esc(x.title)+'</b><span class="tag gold">'+esc(x.status||"Pendiente")+'</span></div><small>Lugar: '+esc(x.location)+' · '+esc(x.date||"")+' · Reportó: '+esc(x.by)+(x.byNumber?' ('+esc(x.byNumber)+')':'')+(x.reporterRole?' · '+esc(x.reporterRole):'')+'</small><p style="margin:9px 0;font-size:13px">'+esc(x.body)+'</p>'+(x.image?'<img class="announcement-image" src="'+esc(x.image)+'" alt="Evidencia fotográfica de la incidencia" loading="lazy">':'')+(x.reviewNote?'<div class="notice"><b>Seguimiento:</b> '+esc(x.reviewNote)+'<br><small>Revisado por '+esc(x.reviewBy||"Supervisor")+'</small></div>':'')+(!p().role.includes("Empleado") && !x.reviewNote?'<div style="margin-top:10px"><button class="btn alt" data-review="'+x.id+'">Agregar seguimiento</button></div>':'')+'</article>').join("");
@@ -247,7 +256,7 @@ function render(){
  }else if(active==="comunicados"){
  html=header("Comunicados oficiales","Avisos formales publicados exclusivamente por Administración.",u.role==="Administración"?'<button class="btn" data-new="comunicados">+ Publicar comunicado</button>':"")+'<section class="card"><h3>Tablón oficial</h3>'+rows(db.comunicados.filter(visible))+'</section><div class="notice">Este módulo es independiente de Conversaciones. Solo Administración publica comunicados oficiales.</div>';
  }else if(active==="conversaciones"){
- html=header("Conversaciones del personal","Participación abierta a los miembros de "+dept+'.','<button class="btn" data-new="conversaciones">+ Nueva conversación</button>')+'<section class="card"><h3>Debates y colaboración</h3>'+rows(db.conversaciones.filter(visible))+'</section>';
+ html=header("Conversaciones del personal","Haz preguntas, comenta y apoya las ideas de tu departamento.",'<button class="btn" data-new="conversaciones">+ Nueva conversación</button>')+'<section class="card"><h3>Debates y colaboración · '+esc(dept)+'</h3>'+conversationRows(db.conversaciones.filter(visible))+'</section><div class="notice">Las conversaciones y sus comentarios son independientes de los comunicados oficiales.</div>';
  }else if(active==="turnos"){
  html=header("Turnos y horarios","Programación con identificador único para "+dept+'.',allowed().includes("personal")?'<button class="btn" data-new="turnos">+ Crear turno</button>':"")+'<section class="card"><h3>Programación</h3>'+table(db.turnos.filter(visible),[["code","Identificador"],["title","Servicio"],["dept","Departamento"],["date","Fecha"],["time","Hora"],["team","Equipo"],["status","Estado"]])+'</section>';
  }else if(active==="equipos"){
@@ -284,7 +293,7 @@ $("record-form").addEventListener("submit",async e=>{
  if(type==="turnos"){record.code="TUR-DEMO-"+String(Date.now()).slice(-5);record.date=get("date");record.time=get("time");record.team=get("team");record.status="Programado"}
  if(type==="incidencias"){record.location=get("location").trim();if(!record.location){alert("Indica el lugar exacto donde ocurrió la incidencia.");return}record.status=p().role.includes("Empleado")?"Pendiente de revisión":"En revisión";}
  if(type==="equipos")record.status="Activo";
- db[type].unshift(record);save();$("modal").classList.remove("show");render();
+ if(type==="conversaciones"){record.comments=[];record.likes=[];}db[type].unshift(record);save();$("modal").classList.remove("show");render();
 });
 function openIncidentReview(id){
  const item=db.incidencias.find(x=>x.id===Number(id));if(!item)return;
@@ -295,7 +304,20 @@ function openIncidentReview(id){
 function optimizeAnnouncementImage(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{const scale=Math.min(1,1400/Math.max(img.width,img.height)),canvas=document.createElement("canvas");canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,canvas.width,canvas.height);URL.revokeObjectURL(url);resolve(canvas.toDataURL("image/jpeg",.78))};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Imagen inválida"))};img.src=url})}
 $("cancel").onclick=()=>$("modal").classList.remove("show");
 $("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("show")});
-document.addEventListener("click",e=>{const page=e.target.closest("[data-page]");if(page){active=page.dataset.page;render();return}const review=e.target.closest("[data-review]");if(review){openIncidentReview(review.dataset.review);return}const add=e.target.closest("[data-new]");if(add)openForm(add.dataset.new)});
+document.addEventListener("click",e=>{
+ const page=e.target.closest("[data-page]");if(page){active=page.dataset.page;render();return}
+ const like=e.target.closest("[data-conv-like]");if(like){const item=db.conversaciones.find(x=>x.id===Number(like.dataset.convLike));if(item){if(!Array.isArray(item.likes))item.likes=[];const who=p().number;item.likes=item.likes.includes(who)?item.likes.filter(v=>v!==who):[...item.likes,who];save();render()}return}
+ const openComment=e.target.closest("[data-comment-open]");if(openComment){const form=document.querySelector('[data-comment-form="'+openComment.dataset.commentOpen+'"]');if(form){form.style.display=form.style.display==="none"?"block":"none";if(form.style.display==="block")form.querySelector("textarea").focus()}return}
+ const review=e.target.closest("[data-review]");if(review){openIncidentReview(review.dataset.review);return}
+ const add=e.target.closest("[data-new]");if(add)openForm(add.dataset.new)
+});
+document.addEventListener("submit",e=>{
+ const form=e.target.closest("[data-comment-form]");if(!form)return;
+ e.preventDefault();const item=db.conversaciones.find(x=>x.id===Number(form.dataset.commentForm));const field=form.querySelector("textarea");const body=field.value.trim();if(!item||!body)return;
+ if(!Array.isArray(item.comments))item.comments=[];
+ item.comments.push({id:Date.now(),body,by:p().name,byNumber:p().number,date:new Date().toLocaleString("es-US")});
+ save();render();
+});
 $("profile").addEventListener("change",()=>{active="inicio";render()});
 render();
 </script><!-- Publicación de la corrección de renderizado -->
