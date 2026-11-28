@@ -1,7 +1,7 @@
 {
-  "name": "Prestige Landscaping & Cleaning",
+  "name": "Prestige Jardinería y Limpieza",
   "short_name": "Prestige",
-  "description": "Portal interno del equipo Prestige.",
+  "description": "Portal interno del equipo de Prestige.",
   "lang": "es",
   "start_url": "./",
   "scope": "./",
